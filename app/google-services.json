@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "277076065072",
+    "firebase_url": "https://cctvportscanner.firebaseio.com",
+    "project_id": "cctvportscanner",
+    "storage_bucket": "cctvportscanner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277076065072:android:0384f0e16417cdfb",
+        "android_client_info": {
+          "package_name": "net.alexandroid.network.cctvportscanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277076065072-sr3ilrqf1cg75odtso98j3a1os197h26.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.alexandroid.network.cctvportscanner",
+            "certificate_hash": "993aaedeefe4409b6d32228aeb21eed4165b5599"
+          }
+        },
+        {
+          "client_id": "277076065072-781ehlhg61fsp14l5vo7tiv17ddhedo9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN92-K5nFzLi0pQAFDw1Ael8gW2B9bN7Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
