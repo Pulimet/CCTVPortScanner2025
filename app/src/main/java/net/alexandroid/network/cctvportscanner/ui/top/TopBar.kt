@@ -1,4 +1,4 @@
-package net.alexandroid.network.cctvportscanner.ui.home
+package net.alexandroid.network.cctvportscanner.ui.top
 
 import android.content.res.Configuration
 import androidx.compose.material3.ExperimentalMaterial3Api

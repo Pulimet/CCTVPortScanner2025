@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Port Scanner</string>
+    <string name="ping">Ping</string>
 </resources>

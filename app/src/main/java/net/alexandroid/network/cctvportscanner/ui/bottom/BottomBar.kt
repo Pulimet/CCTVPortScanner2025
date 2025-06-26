@@ -1,4 +1,4 @@
-package net.alexandroid.network.cctvportscanner.ui.home
+package net.alexandroid.network.cctvportscanner.ui.bottom
 
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
