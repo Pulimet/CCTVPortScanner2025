@@ -25,7 +25,7 @@ fun CustomTextField(
     placeholder: String = "",
     onSubmitted: () -> Unit = {}
 ) {
-    val isHostNameLongEnough = textFieldState.text.length > 6
+    val isTextLongEnough = textFieldState.text.length > 6
 
     val brush = remember {
         Brush.linearGradient(
@@ -42,7 +42,7 @@ fun CustomTextField(
         textStyle = TextStyle(brush = brush),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         onKeyboardAction = { performDefaultAction ->
-            if (isHostNameLongEnough) {
+            if (isTextLongEnough) {
                 onSubmitted()
                 performDefaultAction()
             }

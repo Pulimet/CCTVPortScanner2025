@@ -40,6 +40,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
     ) {
         Box {
             CustomTextField(
+                textFieldState = homeViewModel.hostNameState,
                 enabled = !uiState.isPingInProgress,
                 label = "Enter ip/url...",
                 placeholder = "192.168.0.1",
