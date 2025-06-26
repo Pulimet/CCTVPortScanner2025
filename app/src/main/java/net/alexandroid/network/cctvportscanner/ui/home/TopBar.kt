@@ -14,7 +14,7 @@ import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar() {
+fun TopBar() {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -28,9 +28,9 @@ fun AppBar() {
 
 @Preview(showBackground = true)
 @Composable
-fun AppBarPreview() {
+fun TopBarPreview() {
     MyTheme {
-        AppBar()
+        TopBar()
     }
 }
 
@@ -38,8 +38,8 @@ fun AppBarPreview() {
     name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Composable
-fun AppBarDarkPreview() {
+fun TopBarDarkPreview() {
     MyTheme {
-        AppBar()
+        TopBar()
     }
 }
