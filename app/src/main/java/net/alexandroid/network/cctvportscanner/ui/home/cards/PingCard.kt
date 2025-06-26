@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -66,7 +66,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 if (uiState.isPingInProgress) {
                     Progress(modifier = Modifier.padding(end = 8.dp))
                 } else {
-                    FilledTonalButton(
+                    Button(
                         onClick = { homeViewModel.onHostPingSubmit() },
                         modifier = Modifier.padding(horizontal = 8.dp),
                         enabled = isHostNameLongEnough

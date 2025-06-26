@@ -29,7 +29,6 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
         viewModelScope.launch {
             snapshotFlow { hostNameState.text }
                 .collectLatest { queryText ->
-                    Log.d("HomeViewModel", "onHostNameChange: $queryText, hostNameState: ${hostNameState.text}")
                     if (uiState.value.recentPingStatus != PingStatus.UNKNOWN && hostName != queryText.toString()) {
                         _uiState.value = _uiState.value.copy(recentPingStatus = PingStatus.UNKNOWN)
                     }
@@ -39,6 +38,8 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
     }
 
     fun onHostPingSubmit() {
+        Log.d("HomeViewModel", "onHostPingSubmit")
+
         _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = PingStatus.UNKNOWN)
 
         viewModelScope.launch {
