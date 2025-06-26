@@ -1,5 +1,6 @@
 package net.alexandroid.network.cctvportscanner.ui.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,16 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.home.cards.PingCard
-import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
+    Column(modifier = modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         PingCard()
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 2.dp)
     }
@@ -26,7 +25,15 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    MyTheme {
+    PreviewWrapper {
+        HomeScreen()
+    }
+}
+
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HomeScreenDarkPreview() {
+    PreviewWrapper {
         HomeScreen()
     }
 }

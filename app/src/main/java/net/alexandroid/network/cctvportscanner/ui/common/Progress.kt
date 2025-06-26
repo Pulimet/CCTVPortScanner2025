@@ -25,9 +25,7 @@ fun ProgressPreview() {
     }
 }
 
-@Preview(
-    name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ProgressDarkPreview() {
     MyTheme {

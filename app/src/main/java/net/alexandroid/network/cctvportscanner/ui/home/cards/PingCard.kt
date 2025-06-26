@@ -23,9 +23,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
+import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Progress
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
-import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -39,7 +39,12 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Box {
-            CustomTextField()
+            CustomTextField(
+                enabled = !uiState.isPingInProgress,
+                label = "Enter ip/url...",
+                placeholder = "192.168.0.1",
+                onSubmitted = { homeViewModel.onIpSubmit() }
+            )
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -65,17 +70,15 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
 @Preview(showBackground = true)
 @Composable
 fun PingCardPreview() {
-    MyTheme {
+    PreviewWrapper {
         PingCard()
     }
 }
 
-@Preview(
-    name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES,
-)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PingCardDarkPreview() {
-    MyTheme {
+    PreviewWrapper {
         PingCard()
     }
 }
