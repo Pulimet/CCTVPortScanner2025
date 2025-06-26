@@ -2,6 +2,7 @@ package net.alexandroid.network.cctvportscanner.ui.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.Progress
 import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
@@ -58,23 +60,23 @@ private fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
+        Box {
             SimpleFilledTextFieldSample()
-
-            if (uiState.isPingInProgress) {
-                Progress(modifier = Modifier.padding(end = 8.dp))
-            } else {
-                FilledTonalButton(
-                    onClick = { homeViewModel.onIpSubmit() },
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    enabled = homeViewModel.hostNameState.text.length > 6
-                ) {
-                    Text(stringResource(R.string.ping))
+            Row(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (uiState.isPingInProgress) {
+                    Progress(modifier = Modifier.padding(end = 8.dp))
+                } else {
+                    FilledTonalButton(
+                        onClick = { homeViewModel.onIpSubmit() },
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        enabled = homeViewModel.hostNameState.text.length > 6
+                    ) {
+                        Text(stringResource(R.string.ping))
+                    }
                 }
             }
         }
@@ -91,7 +93,7 @@ fun SimpleFilledTextFieldSample(homeViewModel: HomeViewModel = koinViewModel()) 
         )
     }
     TextField(
-        modifier = Modifier.fillMaxWidth(0.7f),
+        modifier = Modifier.fillMaxWidth(),
         enabled = !uiState.isPingInProgress,
         state = homeViewModel.hostNameState,
         label = { Text("Enter ip/url...") },

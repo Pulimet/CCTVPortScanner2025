@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "net.alexandroid.network.cctvportscanner"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "net.alexandroid.network.cctvportscanner"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 20
         versionName = "1.20"
 
