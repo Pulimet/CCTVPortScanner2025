@@ -26,6 +26,7 @@ import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Progress
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
+import net.alexandroid.network.cctvportscanner.ui.home.PingStatus
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -33,9 +34,15 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsState()
     val isHostNameLongEnough = homeViewModel.hostNameState.text.length > 6
 
+    val borderColor = when (uiState.recentPingStatus) {
+        PingStatus.SUCCESS -> Color.Green
+        PingStatus.FAILURE -> Color.Red
+        else -> Color.Blue
+    }
+
     OutlinedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, borderColor),
         modifier = Modifier.fillMaxWidth()
     ) {
         Box {
@@ -44,7 +51,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 enabled = !uiState.isPingInProgress,
                 label = "Enter ip/url...",
                 placeholder = "192.168.0.1",
-                onSubmitted = { homeViewModel.onIpSubmit() }
+                onSubmitted = { homeViewModel.onHostPingSubmit() }
             )
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
@@ -55,7 +62,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     Progress(modifier = Modifier.padding(end = 8.dp))
                 } else {
                     FilledTonalButton(
-                        onClick = { homeViewModel.onIpSubmit() },
+                        onClick = { homeViewModel.onHostPingSubmit() },
                         modifier = Modifier.padding(horizontal = 8.dp),
                         enabled = isHostNameLongEnough
                     ) {
