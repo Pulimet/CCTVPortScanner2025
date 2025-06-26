@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -21,7 +22,14 @@ import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CustomTextField(homeViewModel: HomeViewModel = koinViewModel()) {
+fun CustomTextField(
+    textFieldState: TextFieldState = TextFieldState(),
+    enabled: Boolean = true,
+    label: String = "",
+    placeholder: String = "",
+    onSubmitted: () -> Unit = {},
+    homeViewModel: HomeViewModel = koinViewModel()
+) {
     val uiState by homeViewModel.uiState.collectAsState()
     val isHostNameLongEnough = homeViewModel.hostNameState.text.length > 6
 
@@ -40,12 +48,11 @@ fun CustomTextField(homeViewModel: HomeViewModel = koinViewModel()) {
         textStyle = TextStyle(brush = brush),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         onKeyboardAction = { performDefaultAction ->
-            if(isHostNameLongEnough) {
+            if (isHostNameLongEnough) {
                 homeViewModel.onIpSubmit()
                 performDefaultAction()
             }
-        }
-    )
+        })
 }
 
 @Preview(showBackground = true)
