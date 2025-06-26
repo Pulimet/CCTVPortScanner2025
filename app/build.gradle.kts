@@ -6,11 +6,13 @@ plugins {
 
 android {
     namespace = "net.alexandroid.network.cctvportscanner"
+    //noinspection GradleDependency
     compileSdk = 35
 
     defaultConfig {
         applicationId = "net.alexandroid.network.cctvportscanner"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 20
         versionName = "1.20"
@@ -29,6 +31,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
+        @Suppress("DEPRECATION")
         jvmTarget = "17"
     }
     buildFeatures {
