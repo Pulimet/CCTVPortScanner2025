@@ -56,7 +56,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 textFieldState = homeViewModel.customPortState,
                 enabled = isPingStatusSuccess,
                 label = stringResource(R.string.enter_port),
-                placeholder = stringResource(R.string.port_80),
+                placeholder = stringResource(R.string.port_example),
                 onSubmitted = { homeViewModel.onPortSubmit() })
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),

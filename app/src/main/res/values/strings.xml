@@ -6,6 +6,6 @@
     <string name="ping_failure">Ping Failed</string>
     <string name="ip_place_holder">192.168.0.1</string>
     <string name="enter_port">Enter port…</string>
-    <string name="port_80">80</string>
+    <string name="port_example">80, 8080–8081</string>
     <string name="check">Check</string>
 </resources>

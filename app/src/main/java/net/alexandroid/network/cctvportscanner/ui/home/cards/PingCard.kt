@@ -30,7 +30,6 @@ import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import net.alexandroid.network.cctvportscanner.ui.home.Status
 import org.koin.androidx.compose.koinViewModel
 
-// TODO 1. Update ping label with ping status (e.g., "Ping Status: Success" or "Ping Status: Failure").
 // TODO 2. Update port label with port validation status (e.g., "Valid" or "Invalid").
 // TODO 3. Update port label with the updated list of ports after validation.
 // TODO 4. Update port hint when no valid host
