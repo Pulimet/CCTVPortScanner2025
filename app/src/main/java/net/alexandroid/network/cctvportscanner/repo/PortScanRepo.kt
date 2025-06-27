@@ -77,16 +77,17 @@ class PortScanRepo {
         callback.invoke(Status.SUCCESS)
     }
 
-    fun validatePort(ports: String, callback: (status: Status) -> Unit) {
+    fun validatePort(ports: String, callback: (status: Status, validPorts: String?) -> Unit) {
         if (ports.trim().isEmpty()) {
-            callback.invoke(Status.UNKNOWN)
+            callback.invoke(Status.UNKNOWN, null)
             return
         }
         val portList = PortUtils.convertStringToIntegerList(ports.trim())
         if (portList.isEmpty()) {
-            callback.invoke(Status.FAILURE)
+            callback.invoke(Status.FAILURE, null)
         } else {
-            callback.invoke(Status.SUCCESS)
+            val validPorts = PortUtils.convertIntegerListToString(portList)
+            callback.invoke(Status.SUCCESS, validPorts)
         }
     }
 }

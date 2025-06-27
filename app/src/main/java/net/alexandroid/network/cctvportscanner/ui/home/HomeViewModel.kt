@@ -50,9 +50,9 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             snapshotFlow { customPortState.text }
                 .collectLatest { queryText ->
                     if (port != queryText.toString()) {
-                        portScanRepo.validatePort(queryText.toString()) { status ->
+                        portScanRepo.validatePort(queryText.toString()) { status, validPorts ->
                             Log.d("HomeViewModel", "Port validation status: $status")
-                            _uiState.value = _uiState.value.copy(portValidStatus = status)
+                            _uiState.value = _uiState.value.copy(portValidStatus = status, validPorts = validPorts ?: "")
                         }
                         port = queryText.toString()
                     }
