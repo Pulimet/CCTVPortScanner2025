@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit
 class PingRepo {
 
     suspend fun pingHost(host: String, timeoutMillis: Long = 5000) = withContext(Dispatchers.IO) {
-        val runtime = Runtime.getRuntime()
         try {
+            val runtime = Runtime.getRuntime()
             val command = "/system/bin/ping -c 1 -w ${timeoutMillis / 1000} $host"
             val process = runtime.exec(command)
             val exited = process.waitFor(timeoutMillis, TimeUnit.MILLISECONDS)
