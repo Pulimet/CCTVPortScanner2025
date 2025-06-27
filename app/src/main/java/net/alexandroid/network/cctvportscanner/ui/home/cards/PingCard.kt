@@ -59,7 +59,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
         Box {
             CustomTextField(
                 textFieldState = homeViewModel.hostNameState,
-                enabled = !uiState.isPingInProgress,
+                enabled = !uiState.isPingInProgress && !uiState.isPortScanInProgress,
                 label = label,
                 placeholder = stringResource(R.string.ip_place_holder),
                 onSubmitted = { homeViewModel.onHostPingSubmit() }
@@ -75,7 +75,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     Button(
                         onClick = { homeViewModel.onHostPingSubmit() },
                         modifier = Modifier.padding(horizontal = 8.dp),
-                        enabled = isHostNameValid
+                        enabled = isHostNameValid && !uiState.isPortScanInProgress
                     ) {
                         Text(stringResource(R.string.ping))
                     }

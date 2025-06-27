@@ -25,8 +25,6 @@ fun CustomTextField(
     placeholder: String = "",
     onSubmitted: () -> Unit = {}
 ) {
-    val isTextLongEnough = textFieldState.text.length > 6
-
     val brush = remember {
         Brush.linearGradient(
             colors = listOf(Color.Blue, Color.Magenta, Color.Red, Color.Blue, Color.Magenta)
@@ -42,7 +40,7 @@ fun CustomTextField(
         textStyle = TextStyle(brush = brush),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         onKeyboardAction = { performDefaultAction ->
-            if (isTextLongEnough) {
+            if (enabled) {
                 onSubmitted()
                 performDefaultAction()
             }

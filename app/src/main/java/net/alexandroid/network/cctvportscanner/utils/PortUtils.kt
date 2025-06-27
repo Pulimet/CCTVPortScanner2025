@@ -1,8 +1,8 @@
 package net.alexandroid.network.cctvportscanner.utils
 
 object PortUtils {
-    fun convertStringToIntegerList(ports: String): ArrayList<Int?> {
-        val list = ArrayList<Int?>()
+    fun convertStringToIntegerList(ports: String): ArrayList<Int> {
+        val list = ArrayList<Int>()
         val regex = "[^0-9,\\-]"
         val result = ports.replace(regex.toRegex(), "")
 
@@ -31,13 +31,13 @@ object PortUtils {
         return list
     }
 
-    fun convertIntegerListToString(list: java.util.ArrayList<Int?>): String {
+    fun convertIntegerListToString(list: java.util.ArrayList<Int>): String {
         val stringBuilder = StringBuilder()
         var firstRangeNum = -1
         for (i in list.indices) {
-            if (i + 1 < list.size && list[i + 1]!! - 1 == list.get(i)) {
+            if (i + 1 < list.size && list[i + 1] - 1 == list[i]) {
                 if (firstRangeNum < 0) {
-                    firstRangeNum = list[i]!!
+                    firstRangeNum = list[i]
                 }
             } else {
                 if (firstRangeNum > -1) {

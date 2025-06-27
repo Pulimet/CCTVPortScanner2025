@@ -1,5 +1,8 @@
 package net.alexandroid.network.cctvportscanner.repo
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.alexandroid.network.cctvportscanner.ui.home.Status
 import net.alexandroid.network.cctvportscanner.utils.PortUtils
 import java.net.InetSocketAddress
@@ -13,16 +16,30 @@ enum class PortScanStatus {
     CLOSED
 }
 
-interface ScanResult {
-    fun onResult(host: String, port: Int, portScanStatus: PortScanStatus)
-}
-
 private const val TIMEOUT_IN_MS = 2000
 
 class PortScanRepo {
-    var state = PortScanStatus.INIT
+    var scanResults = mutableMapOf<Int, PortScanStatus>()
+    var isScanInProgress = false
 
-    fun scanPort(host: String, port: Int, scanResult: ScanResult) {
+    suspend fun scanPorts(host: String, ports: String, callback: (Map<Int, PortScanStatus>, isScanInProgress: Boolean) -> Unit) =
+        withContext(Dispatchers.IO) {
+            scanResults.clear()
+            isScanInProgress = true
+            val portList = PortUtils.convertStringToIntegerList(ports.trim())
+            portList.forEach {
+                launch {
+                    scanPort(host, it) { port, status ->
+                        scanResults[port] = status
+                        isScanInProgress = portList.size != scanResults.size
+                        callback(scanResults, isScanInProgress)
+                    }
+                }
+            }
+        }
+
+    fun scanPort(host: String, port: Int, callback: (port: Int, status: PortScanStatus) -> Unit) {
+        var state: PortScanStatus
         try {
             val socket = Socket()
             val address = InetSocketAddress(host, port)
@@ -41,7 +58,7 @@ class PortScanRepo {
             state = PortScanStatus.CLOSED
         }
 
-        scanResult.onResult(host, port, state)
+        callback(port, state)
     }
 
     fun validateHost(host: String, callback: (status: Status) -> Unit) {

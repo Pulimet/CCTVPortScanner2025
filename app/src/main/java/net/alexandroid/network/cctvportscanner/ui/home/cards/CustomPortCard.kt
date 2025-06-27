@@ -29,8 +29,6 @@ import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import net.alexandroid.network.cctvportscanner.ui.home.Status
 import org.koin.androidx.compose.koinViewModel
 
-// TODO 1. Connect check button with implementation
-
 @Composable
 fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsState()
@@ -63,7 +61,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
         Box {
             CustomTextField(
                 textFieldState = homeViewModel.customPortState,
-                enabled = isHostValid,
+                enabled = isHostValid && !uiState.isPortScanInProgress,
                 label = label,
                 placeholder = stringResource(R.string.port_example),
                 onSubmitted = { homeViewModel.onPortSubmit() })
@@ -75,7 +73,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 Button(
                     onClick = { homeViewModel.onPortSubmit() },
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    enabled = isPortValid,
+                    enabled = isPortValid && !uiState.isPortScanInProgress,
                 ) {
                     Text(stringResource(R.string.check))
                 }
