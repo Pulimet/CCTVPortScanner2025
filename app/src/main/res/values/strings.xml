@@ -2,8 +2,10 @@
     <string name="app_name">Port Scanner</string>
     <string name="ping">Ping</string>
     <string name="enter_ip_url">Enter ip/url…</string>
+    <string name="ping_success">Ping Success</string>
+    <string name="ping_failure">Ping Failed</string>
     <string name="ip_place_holder">192.168.0.1</string>
-    <string name="enter_port">Enter port...</string>
+    <string name="enter_port">Enter port…</string>
     <string name="port_80">80</string>
     <string name="check">Check</string>
 </resources>

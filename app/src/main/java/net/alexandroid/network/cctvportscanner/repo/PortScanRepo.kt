@@ -44,6 +44,39 @@ class PortScanRepo {
         scanResult.onResult(host, port, state)
     }
 
+    fun validateHost(host: String, callback: (status: Status) -> Unit) {
+        if (host.trim().isEmpty() || host.trim().length < 7) {
+            callback.invoke(Status.UNKNOWN)
+            return
+        }
+        val parts = host.trim().split(".")
+
+        if (host[0].isDigit()) {
+            if (parts.size != 4) {
+                callback.invoke(Status.FAILURE)
+                return
+            }
+            try {
+                parts.forEach { part ->
+                    if (part.toIntOrNull() == null || part.toInt() !in 0..255) {
+                        callback.invoke(Status.FAILURE)
+                        return
+                    }
+                }
+                callback.invoke(Status.SUCCESS)
+            } catch (_: NumberFormatException) {
+                callback.invoke(Status.FAILURE)
+            }
+
+        } else {
+            if (parts.size < 2 || parts.last().length < 2) {
+                callback.invoke(Status.FAILURE)
+                return
+            }
+        }
+        callback.invoke(Status.SUCCESS)
+    }
+
     fun validatePort(ports: String, callback: (status: Status) -> Unit) {
         if (ports.trim().isEmpty()) {
             callback.invoke(Status.UNKNOWN)

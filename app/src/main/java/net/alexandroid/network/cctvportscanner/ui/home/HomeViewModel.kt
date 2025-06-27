@@ -31,10 +31,16 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
         viewModelScope.launch {
             snapshotFlow { hostNameState.text }
                 .collectLatest { queryText ->
-                    if (uiState.value.recentPingStatus != Status.UNKNOWN && hostName != queryText.toString()) {
-                        _uiState.value = _uiState.value.copy(recentPingStatus = Status.UNKNOWN)
+                    if (hostName != queryText.toString()) {
+                        portScanRepo.validateHost(queryText.toString()) { status ->
+                            Log.d("HomeViewModel", "Host validation status: $status")
+                            _uiState.value = _uiState.value.copy(
+                                hostValidStatus = status,
+                                recentPingStatus = Status.UNKNOWN
+                            )
+                        }
+                        hostName = queryText.toString()
                     }
-                    hostName = queryText.toString()
                 }
         }
     }
@@ -48,13 +54,16 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
                             Log.d("HomeViewModel", "Port validation status: $status")
                             _uiState.value = _uiState.value.copy(portValidStatus = status)
                         }
+                        port = queryText.toString()
                     }
-                    port = queryText.toString()
                 }
         }
     }
 
     fun onHostPingSubmit() {
+        if (_uiState.value.hostValidStatus != Status.SUCCESS) {
+            return
+        }
         Log.d("HomeViewModel", "onHostPingSubmit")
 
         _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
@@ -70,6 +79,9 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
     }
 
     fun onPortSubmit() {
+        if (_uiState.value.portValidStatus != Status.SUCCESS) {
+            return
+        }
         Log.d("HomeViewModel", "onPortSubmit")
     }
 
