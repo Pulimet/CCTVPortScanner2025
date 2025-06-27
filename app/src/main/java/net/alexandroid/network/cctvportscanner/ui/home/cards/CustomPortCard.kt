@@ -25,24 +25,24 @@ import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
-import net.alexandroid.network.cctvportscanner.ui.common.Progress
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import net.alexandroid.network.cctvportscanner.ui.home.Status
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
+fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsState()
-    val isHostNameLongEnough = homeViewModel.hostNameState.text.length > 6
 
-    val borderColor = when (uiState.recentPingStatus) {
+    val borderColor = when (uiState.portValidStatus) {
         Status.SUCCESS -> Color.Green
         Status.FAILURE -> Color.Red
         else -> Color.Black
     }
 
-    LaunchedEffect(uiState.recentPingStatus) {
-        homeViewModel.listenForHostNameChange()
+    val isPingStatusSuccess = uiState.recentPingStatus == Status.SUCCESS
+    val isPortValid = uiState.portValidStatus == Status.SUCCESS
+
+    LaunchedEffect(uiState.portValidStatus) {
         homeViewModel.listenForPortChange()
     }
 
@@ -53,46 +53,41 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
     ) {
         Box {
             CustomTextField(
-                textFieldState = homeViewModel.hostNameState,
-                enabled = !uiState.isPingInProgress,
-                label = stringResource(R.string.enter_ip_url),
-                placeholder = stringResource(R.string.ip_place_holder),
-                onSubmitted = { homeViewModel.onHostPingSubmit() }
-            )
+                textFieldState = homeViewModel.customPortState,
+                enabled = isPingStatusSuccess,
+                label = stringResource(R.string.enter_port),
+                placeholder = stringResource(R.string.port_80),
+                onSubmitted = { homeViewModel.onPortSubmit() })
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (uiState.isPingInProgress) {
-                    Progress(modifier = Modifier.padding(end = 8.dp))
-                } else {
-                    Button(
-                        onClick = { homeViewModel.onHostPingSubmit() },
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        enabled = isHostNameLongEnough
-                    ) {
-                        Text(stringResource(R.string.ping))
-                    }
+                Button(
+                    onClick = { homeViewModel.onPortSubmit() },
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    enabled = isPortValid,
+                ) {
+                    Text(stringResource(R.string.check))
                 }
+
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun PingCardPreview() {
+fun CustomPortCardPreview() {
     PreviewWrapper {
-        PingCard()
+        CustomPortCard()
     }
 }
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun PingCardDarkPreview() {
+fun CustomPortCardDarkPreview() {
     PreviewWrapper {
-        PingCard()
+        CustomPortCard()
     }
 }

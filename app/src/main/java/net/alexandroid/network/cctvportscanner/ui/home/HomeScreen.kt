@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
+import net.alexandroid.network.cctvportscanner.ui.home.cards.CustomPortCard
 import net.alexandroid.network.cctvportscanner.ui.home.cards.PingCard
 
 @Composable
@@ -19,6 +20,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         .padding(16.dp)) {
         PingCard()
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 2.dp)
+        CustomPortCard()
     }
 }
 

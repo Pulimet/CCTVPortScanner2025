@@ -1,5 +1,7 @@
 package net.alexandroid.network.cctvportscanner.repo
 
+import net.alexandroid.network.cctvportscanner.ui.home.Status
+import net.alexandroid.network.cctvportscanner.utils.PortUtils
 import java.net.InetSocketAddress
 import java.net.Socket
 
@@ -31,14 +33,27 @@ class PortScanRepo {
                 state = PortScanStatus.CLOSED
             }
             socket.close()
-        } catch (e: java.net.UnknownHostException) {
+        } catch (_: java.net.UnknownHostException) {
             state = PortScanStatus.WRONG_HOST
-        } catch (e: java.net.SocketTimeoutException) {
+        } catch (_: java.net.SocketTimeoutException) {
             state = PortScanStatus.TIMEOUT
-        } catch (e: java.io.IOException) {
+        } catch (_: java.io.IOException) {
             state = PortScanStatus.CLOSED
         }
 
         scanResult.onResult(host, port, state)
+    }
+
+    fun validatePort(ports: String, callback: (status: Status) -> Unit) {
+        if (ports.trim().isEmpty()) {
+            callback.invoke(Status.UNKNOWN)
+            return
+        }
+        val portList = PortUtils.convertStringToIntegerList(ports.trim())
+        if (portList.isEmpty()) {
+            callback.invoke(Status.FAILURE)
+        } else {
+            callback.invoke(Status.SUCCESS)
+        }
     }
 }

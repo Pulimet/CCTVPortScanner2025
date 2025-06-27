@@ -19,7 +19,9 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     val hostNameState = TextFieldState()
+    val customPortState = TextFieldState()
     var hostName = ""
+    var port = ""
 
     fun onCreate() {
         Log.d("HomeViewModel", "onCreate called $this")
@@ -29,10 +31,25 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
         viewModelScope.launch {
             snapshotFlow { hostNameState.text }
                 .collectLatest { queryText ->
-                    if (uiState.value.recentPingStatus != PingStatus.UNKNOWN && hostName != queryText.toString()) {
-                        _uiState.value = _uiState.value.copy(recentPingStatus = PingStatus.UNKNOWN)
+                    if (uiState.value.recentPingStatus != Status.UNKNOWN && hostName != queryText.toString()) {
+                        _uiState.value = _uiState.value.copy(recentPingStatus = Status.UNKNOWN)
                     }
                     hostName = queryText.toString()
+                }
+        }
+    }
+
+    fun listenForPortChange() {
+        viewModelScope.launch {
+            snapshotFlow { customPortState.text }
+                .collectLatest { queryText ->
+                    if (port != queryText.toString()) {
+                        portScanRepo.validatePort(queryText.toString()) { status ->
+                            Log.d("HomeViewModel", "Port validation status: $status")
+                            _uiState.value = _uiState.value.copy(portValidStatus = status)
+                        }
+                    }
+                    port = queryText.toString()
                 }
         }
     }
@@ -40,16 +57,20 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
     fun onHostPingSubmit() {
         Log.d("HomeViewModel", "onHostPingSubmit")
 
-        _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = PingStatus.UNKNOWN)
+        _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
 
         viewModelScope.launch {
             val pingResult = pingRepo.pingHost(hostNameState.text.toString())
             Log.d("HomeViewModel", "pingHost complete and pingResult $pingResult")
             _uiState.value = _uiState.value.copy(
                 isPingInProgress = false,
-                recentPingStatus = if (pingResult) PingStatus.SUCCESS else PingStatus.FAILURE
+                recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
             )
         }
+    }
+
+    fun onPortSubmit() {
+        Log.d("HomeViewModel", "onPortSubmit")
     }
 
 }
