@@ -1,15 +1,17 @@
 package net.alexandroid.network.cctvportscanner.repo
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import net.alexandroid.network.cctvportscanner.ui.home.Status
 import net.alexandroid.network.cctvportscanner.utils.PortUtils
 import java.net.InetSocketAddress
 import java.net.Socket
 
 enum class PortScanStatus {
-    INIT,
     OPEN,
     WRONG_HOST,
     TIMEOUT,
@@ -18,25 +20,40 @@ enum class PortScanStatus {
 
 private const val TIMEOUT_IN_MS = 2000
 
+data class ScanUpdate(val results: Map<Int, PortScanStatus>, val isScanInProgress: Boolean)
+
 class PortScanRepo {
     var scanResults = mutableMapOf<Int, PortScanStatus>()
     var isScanInProgress = false
 
-    suspend fun scanPorts(host: String, ports: String, callback: (Map<Int, PortScanStatus>, isScanInProgress: Boolean) -> Unit) =
-        withContext(Dispatchers.IO) {
-            scanResults.clear()
-            isScanInProgress = true
-            val portList = PortUtils.convertStringToIntegerList(ports.trim())
-            portList.forEach {
-                launch {
-                    scanPort(host, it) { port, status ->
-                        scanResults[port] = status
-                        isScanInProgress = portList.size != scanResults.size
-                        callback(scanResults, isScanInProgress)
-                    }
+    fun scanPorts(host: String, ports: String): Flow<ScanUpdate> = callbackFlow {
+        scanResults.clear()
+        isScanInProgress = true
+
+        val callback = { currentResults: Map<Int, PortScanStatus>, currentIsScanInProgress: Boolean ->
+            trySend(ScanUpdate(currentResults, isScanInProgress))
+            if (!isScanInProgress) {
+                close() // Close the flow when scanning is done
+            }
+        }
+
+        val portList = PortUtils.convertStringToIntegerList(ports.trim())
+
+        portList.forEach {
+            launch(Dispatchers.IO) {
+                scanPort(host, it) { port, status ->
+                    scanResults[port] = status
+                    isScanInProgress = portList.size != scanResults.size
+                    callback(scanResults, isScanInProgress)
                 }
             }
         }
+
+        awaitClose {
+            Log.d("PortScanRepo", "awaitClose called for $host. Cleaning up scan...")
+        }
+
+    }
 
     fun scanPort(host: String, port: Int, callback: (port: Int, status: PortScanStatus) -> Unit) {
         var state: PortScanStatus
