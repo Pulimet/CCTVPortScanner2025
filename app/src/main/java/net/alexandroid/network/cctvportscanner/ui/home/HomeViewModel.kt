@@ -6,17 +6,17 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
@@ -96,15 +96,17 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             customPortState.text.toString()
         )
 
+        // TODO Debug why onEach is not called when host is not valid
         scanFlow
             .onStart { Log.d("HomeViewModel", "Port scan Started") }
-            .filter { it.isScanInProgress }
-            .sample(1000L) // Emit the most recent "in-progress" item every 1 second
+            .conflate()
             .onEach { sampledUpdate ->
+                Log.d("HomeViewModel", "onEach results size: ${sampledUpdate.results.size}")
                 _uiState.value = _uiState.value.copy(
                     portScanResults = sampledUpdate.results,
                     isPortScanInProgress = true // It's an in-progress update
                 )
+                delay(500L)
             }
             .onCompletion {
                 Log.d("HomeViewModel", "Port scan completed")

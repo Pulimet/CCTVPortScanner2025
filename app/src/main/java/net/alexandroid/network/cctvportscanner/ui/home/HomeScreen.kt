@@ -12,15 +12,20 @@ import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.home.cards.CustomPortCard
 import net.alexandroid.network.cctvportscanner.ui.home.cards.PingCard
+import net.alexandroid.network.cctvportscanner.ui.home.cards.ScanResultCard
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         PingCard()
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 2.dp)
         CustomPortCard()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 2.dp)
+        ScanResultCard()
     }
 }
 

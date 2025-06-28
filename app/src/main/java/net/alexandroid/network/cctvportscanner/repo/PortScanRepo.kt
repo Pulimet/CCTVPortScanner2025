@@ -10,6 +10,7 @@ import net.alexandroid.network.cctvportscanner.ui.home.Status
 import net.alexandroid.network.cctvportscanner.utils.PortUtils
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.util.concurrent.ConcurrentHashMap
 
 enum class PortScanStatus {
     OPEN,
@@ -23,7 +24,7 @@ private const val TIMEOUT_IN_MS = 2000
 data class ScanUpdate(val results: Map<Int, PortScanStatus>, val isScanInProgress: Boolean)
 
 class PortScanRepo {
-    var scanResults = mutableMapOf<Int, PortScanStatus>()
+    var scanResults = ConcurrentHashMap<Int, PortScanStatus>()
     var isScanInProgress = false
 
     fun scanPorts(host: String, ports: String): Flow<ScanUpdate> = callbackFlow {
@@ -61,10 +62,10 @@ class PortScanRepo {
             val socket = Socket()
             val address = InetSocketAddress(host, port)
             socket.connect(address, TIMEOUT_IN_MS)
-            if (socket.isConnected && socket.isBound) {
-                state = PortScanStatus.OPEN
+            state = if (socket.isConnected && socket.isBound) {
+                PortScanStatus.OPEN
             } else {
-                state = PortScanStatus.CLOSED
+                PortScanStatus.CLOSED
             }
             socket.close()
         } catch (_: java.net.UnknownHostException) {
@@ -74,6 +75,7 @@ class PortScanRepo {
         } catch (_: java.io.IOException) {
             state = PortScanStatus.CLOSED
         }
+        Log.d("HomeViewModel", "Host: ${host} -> Port $port state: ${state.name}")
 
         callback(port, state)
     }
