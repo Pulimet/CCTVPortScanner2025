@@ -96,7 +96,6 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             customPortState.text.toString()
         )
 
-        // TODO Debug why onEach is not called when host is not valid
         scanFlow
             .onStart { Log.d("HomeViewModel", "Port scan Started") }
             .conflate()

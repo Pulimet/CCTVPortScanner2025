@@ -75,7 +75,7 @@ class PortScanRepo {
         } catch (_: java.io.IOException) {
             state = PortScanStatus.CLOSED
         }
-        Log.d("HomeViewModel", "Host: ${host} -> Port $port state: ${state.name}")
+        Log.d("HomeViewModel", "Host: $host -> Port $port state: ${state.name}")
 
         callback(port, state)
     }
