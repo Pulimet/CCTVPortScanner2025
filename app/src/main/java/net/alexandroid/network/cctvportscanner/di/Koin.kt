@@ -1,8 +1,11 @@
 package net.alexandroid.network.cctvportscanner.di
 
 import android.content.Context
+import androidx.room.Room
+import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
+import net.alexandroid.network.cctvportscanner.room.ScannerDatabase
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -23,6 +26,13 @@ object Koin {
     val appModule = module {
         singleOf(::PortScanRepo)
         singleOf(::PingRepo)
+        singleOf(::DbRepo)
+
         viewModelOf(::HomeViewModel)
+
+        single {
+            Room.databaseBuilder(androidContext(), ScannerDatabase::class.java, "scanner_database").build()
+        }
+        single { get<ScannerDatabase>().hostDao() }
     }
 }

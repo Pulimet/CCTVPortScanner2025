@@ -18,10 +18,15 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
 
-class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo: PingRepo) : ViewModel() {
+class HomeViewModel(
+    private val portScanRepo: PortScanRepo,
+    private val pingRepo: PingRepo,
+    private val dbRepo: DbRepo
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -30,6 +35,15 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
     val customPortState = TextFieldState()
     var hostName = ""
     var port = ""
+
+    init {
+        viewModelScope.launch {
+            dbRepo.getAllHostsFlow().collect { hosts ->
+                Log.d("HomeViewModel", "Hosts from DB: ${hosts.size}")
+                _uiState.value = _uiState.value.copy(allHosts = hosts)
+            }
+        }
+    }
 
     fun onCreate() {
         Log.d("HomeViewModel", "onCreate called $this")
@@ -77,17 +91,22 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             _uiState.value = _uiState.value.copy(
                 isPingInProgress = false, recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
             )
+            dbRepo.insertHost(hostNameState.text.toString())
         }
     }
 
     @OptIn(FlowPreview::class)
-    fun onPortSubmit() {
+    fun onPortScanSubmit() {
         if (_uiState.value.portValidStatus != Status.SUCCESS && !_uiState.value.isPortScanInProgress) {
             return
         }
         Log.d("HomeViewModel", "onPortSubmit")
 
         _uiState.value = _uiState.value.copy(isPortScanInProgress = true)
+
+        viewModelScope.launch {
+            dbRepo.insertHost(hostNameState.text.toString())
+        }
 
         val scanFlow = portScanRepo.scanPorts(
             hostNameState.text.toString(), customPortState.text.toString()

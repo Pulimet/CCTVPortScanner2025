@@ -64,14 +64,14 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 enabled = isHostValid && !uiState.isPortScanInProgress,
                 label = label,
                 placeholder = stringResource(R.string.port_example),
-                onSubmitted = { homeViewModel.onPortSubmit() })
+                onSubmitted = { homeViewModel.onPortScanSubmit() })
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Button(
-                    onClick = { homeViewModel.onPortSubmit() },
+                    onClick = { homeViewModel.onPortScanSubmit() },
                     modifier = Modifier.padding(horizontal = 8.dp),
                     enabled = isPortValid && !uiState.isPortScanInProgress,
                 ) {
