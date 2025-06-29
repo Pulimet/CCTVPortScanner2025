@@ -65,6 +65,7 @@ object PortUtils {
         val ports: List<Int> = results.keys.toList().sorted()
 
         for (i in ports.indices) {
+            //Log.d("PortUtils", "Port: ${ports[i]} is ${results[ports[i]]}")
             val port: Int = ports[i]
             var nextPort = 0
             var isNextPortOpen = false
@@ -104,4 +105,23 @@ object PortUtils {
         }
         return map
     }
+
+    fun getRecommendedMaxConcurrentScans(): Int {
+        val cores = Runtime.getRuntime().availableProcessors()
+        val multiplier = 50 // Allow up to 50 scans per core
+
+        var recommendedScans = cores * multiplier
+
+        val absoluteMin = 30   // Don't go too low, even on single/dual core
+        val absoluteMax = 400  // Don't go too high, regardless of cores
+
+        if (recommendedScans < absoluteMin) {
+            recommendedScans = absoluteMin
+        }
+        if (recommendedScans > absoluteMax) {
+            recommendedScans = absoluteMax
+        }
+        return recommendedScans
+    }
+
 }

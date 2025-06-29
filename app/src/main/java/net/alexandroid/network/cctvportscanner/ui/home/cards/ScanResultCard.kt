@@ -64,7 +64,7 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-            if (result.isEmpty()) {
+            if (!uiState.isPortScanInProgress && result.isEmpty()) {
                 Text(
                     text = stringResource(R.string.no_results),
                     modifier = Modifier.align(Alignment.Center)

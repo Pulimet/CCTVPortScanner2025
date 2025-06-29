@@ -2,6 +2,8 @@ package net.alexandroid.network.cctvportscanner.repo
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -27,36 +29,38 @@ class PortScanRepo {
     var scanResults = ConcurrentHashMap<Int, PortScanStatus>()
     var isScanInProgress = false
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun scanPorts(host: String, ports: String): Flow<ScanUpdate> = callbackFlow {
         scanResults.clear()
         isScanInProgress = true
 
-        val callback = { currentResults: Map<Int, PortScanStatus>, currentIsScanInProgress: Boolean ->
-            trySend(ScanUpdate(currentResults, isScanInProgress))
-            if (!isScanInProgress) {
-                close() // Close the flow when scanning is done
-            }
-        }
-
         val portList = PortUtils.convertStringToIntegerList(ports.trim())
 
-        portList.forEach {
-            launch(Dispatchers.IO) {
-                scanPort(host, it) { port, status ->
-                    scanResults[port] = status
-                    isScanInProgress = portList.size != scanResults.size
-                    callback(scanResults, isScanInProgress)
+        val maxConcurrentScans = PortUtils.getRecommendedMaxConcurrentScans()
+        Log.d("PortScanRepo", "maxConcurrentScans: $maxConcurrentScans")
+        val dispatcher = Dispatchers.IO.limitedParallelism(maxConcurrentScans)
+        val parentJob = Job()
+
+        portList.forEach { port ->
+            launch(dispatcher + parentJob) {
+                val status = scanPort(host, port)
+                scanResults[port] = status
+                isScanInProgress = portList.size != scanResults.size
+                trySend(ScanUpdate(scanResults, isScanInProgress))
+                if (!isScanInProgress) {
+                    close() // Close the flow when scanning is done
                 }
             }
         }
 
         awaitClose {
             Log.d("PortScanRepo", "awaitClose called for $host. Cleaning up scan...")
+            parentJob.cancel() // Cancel all launched scan jobs if the flow is cancelled
         }
 
     }
 
-    fun scanPort(host: String, port: Int, callback: (port: Int, status: PortScanStatus) -> Unit) {
+    fun scanPort(host: String, port: Int): PortScanStatus {
         var state: PortScanStatus
         try {
             val socket = Socket()
@@ -75,9 +79,9 @@ class PortScanRepo {
         } catch (_: java.io.IOException) {
             state = PortScanStatus.CLOSED
         }
-        Log.d("HomeViewModel", "Host: $host -> Port $port state: ${state.name}")
+        // Log.d("HomeViewModel", "Host: $host -> Port $port state: ${state.name}")
 
-        callback(port, state)
+        return state
     }
 
     fun validateHost(host: String, callback: (status: Status) -> Unit) {

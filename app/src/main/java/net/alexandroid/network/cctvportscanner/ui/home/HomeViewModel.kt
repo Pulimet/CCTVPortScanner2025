@@ -40,7 +40,6 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             snapshotFlow { hostNameState.text }.collectLatest { queryText ->
                 if (hostName != queryText.toString()) {
                     portScanRepo.validateHost(queryText.toString()) { status ->
-                        Log.d("HomeViewModel", "Host validation status: $status")
                         _uiState.value = _uiState.value.copy(
                             hostValidStatus = status, recentPingStatus = Status.UNKNOWN
                         )
@@ -56,7 +55,6 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
             snapshotFlow { customPortState.text }.collectLatest { queryText ->
                 if (port != queryText.toString()) {
                     portScanRepo.validatePort(queryText.toString()) { status, validPorts ->
-                        Log.d("HomeViewModel", "Port validation status: $status")
                         _uiState.value = _uiState.value.copy(portValidStatus = status, validPorts = validPorts ?: "")
                     }
                     port = queryText.toString()
@@ -92,28 +90,20 @@ class HomeViewModel(private val portScanRepo: PortScanRepo, private val pingRepo
         _uiState.value = _uiState.value.copy(isPortScanInProgress = true)
 
         val scanFlow = portScanRepo.scanPorts(
-            hostNameState.text.toString(),
-            customPortState.text.toString()
+            hostNameState.text.toString(), customPortState.text.toString()
         )
 
-        scanFlow
-            .onStart { Log.d("HomeViewModel", "Port scan Started") }
-            .conflate()
-            .onEach { sampledUpdate ->
-                Log.d("HomeViewModel", "onEach results size: ${sampledUpdate.results.size}")
-                _uiState.value = _uiState.value.copy(
-                    portScanResults = sampledUpdate.results,
-                    isPortScanInProgress = true // It's an in-progress update
-                )
-                delay(500L)
-            }
-            .onCompletion {
-                Log.d("HomeViewModel", "Port scan completed")
-                _uiState.value = _uiState.value.copy(isPortScanInProgress = false)
-            }
-            .catch { e -> // Catch errors from the sampling part
-                Log.e("HomeViewModel", "Error in sampled progress flow", e)
-            }
-            .launchIn(viewModelScope) // Launch this part as a separate collector
+        scanFlow.onStart { Log.d("HomeViewModel", "Port scan Started") }.conflate().onEach { sampledUpdate ->
+            Log.d("HomeViewModel", "onEach results size: ${sampledUpdate.results.size}")
+            _uiState.value = _uiState.value.copy(
+                portScanResults = sampledUpdate.results, isPortScanInProgress = true // It's an in-progress update
+            )
+            delay(500L)
+        }.onCompletion {
+            Log.d("HomeViewModel", "Port scan completed")
+            _uiState.value = _uiState.value.copy(isPortScanInProgress = false)
+        }.catch { e -> // Catch errors from the sampling part
+            Log.e("HomeViewModel", "Error in sampled progress flow", e)
+        }.launchIn(viewModelScope) // Launch this part as a separate collector
     }
 }
