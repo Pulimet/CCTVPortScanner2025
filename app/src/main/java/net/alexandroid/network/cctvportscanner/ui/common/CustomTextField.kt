@@ -1,6 +1,7 @@
 package net.alexandroid.network.cctvportscanner.ui.common
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,14 +44,15 @@ fun CustomTextField(
 
     var expanded by remember { mutableStateOf(false) }
 
-    val filteredSuggestions = remember(textFieldState.text) { // Recalculate when value changes
-        suggestionsList.filter { suggestion ->
+    val filteredSuggestions = remember(textFieldState.text.toString()) { // Recalculate when value changes
+        val filteredList = suggestionsList.filter { suggestion ->
             suggestion.contains(textFieldState.text.toString(), ignoreCase = true)
         }
-    }
-
-    LaunchedEffect(filteredSuggestions) {
-        expanded = true
+        if (filteredList.isNotEmpty()) {
+            expanded = true
+        }
+        Log.d("CustomTextField", "filteredSuggestions, filteredList size ${filteredList.size}")
+        filteredList
     }
 
     TextField(
