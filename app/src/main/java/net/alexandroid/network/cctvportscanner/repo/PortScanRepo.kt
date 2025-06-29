@@ -46,7 +46,7 @@ class PortScanRepo {
                 val status = scanPort(host, port)
                 scanResults[port] = status
                 isScanInProgress = portList.size != scanResults.size
-                trySend(ScanUpdate(scanResults, isScanInProgress))
+                trySend(ScanUpdate(scanResults.toMap(), isScanInProgress))
                 if (!isScanInProgress) {
                     close() // Close the flow when scanning is done
                 }
