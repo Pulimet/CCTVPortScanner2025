@@ -15,9 +15,9 @@ interface HostDao {
     @Delete
     suspend fun delete(item: HostEntity)
 
-    @Query("SELECT * from hosts ORDER BY hostName ASC")
+    @Query("SELECT * from hosts ORDER BY host_name ASC")
     suspend fun getAllItems(): List<HostEntity>
 
-    @Query("SELECT * from hosts ORDER BY hostName ASC")
+    @Query("SELECT * from hosts ORDER BY host_name ASC")
     fun getAllItemsFlow(): Flow<List<HostEntity>>
 }

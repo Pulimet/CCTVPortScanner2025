@@ -1,7 +1,6 @@
 package net.alexandroid.network.cctvportscanner.ui.home
 
 import net.alexandroid.network.cctvportscanner.repo.PortScanStatus
-import net.alexandroid.network.cctvportscanner.room.HostEntity
 
 enum class Status {
     SUCCESS,
