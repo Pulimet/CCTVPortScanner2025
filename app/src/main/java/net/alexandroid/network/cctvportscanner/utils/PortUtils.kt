@@ -2,6 +2,7 @@ package net.alexandroid.network.cctvportscanner.utils
 
 import androidx.compose.ui.graphics.Color
 import net.alexandroid.network.cctvportscanner.repo.PortScanStatus
+import net.alexandroid.network.cctvportscanner.ui.theme.Green
 
 object PortUtils {
     fun convertStringToIntegerList(ports: String): ArrayList<Int> {
@@ -82,7 +83,7 @@ object PortUtils {
                     }
                 } else {
                     if (firstRangeNum == 0) {
-                        map.put("$port ", Color.Green)
+                        map.put("$port ", Green)
                     } else {
                         map.put("$firstRangeNum - $port ", Color.Green)
                         firstRangeNum = 0
