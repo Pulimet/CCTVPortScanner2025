@@ -1,8 +1,11 @@
 package net.alexandroid.network.cctvportscanner.ui.home
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshotFlow
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
@@ -18,6 +21,8 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import net.alexandroid.network.cctvportscanner.datasotre.DataStore
+import net.alexandroid.network.cctvportscanner.datasotre.DataStore.getDataStoreByKey
 import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
@@ -25,11 +30,14 @@ import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
 class HomeViewModel(
     private val portScanRepo: PortScanRepo,
     private val pingRepo: PingRepo,
-    private val dbRepo: DbRepo
+    private val dbRepo: DbRepo,
+    context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    val dataStore = context.getDataStoreByKey(DataStore.Key.HOME_DATA)
 
     val hostNameState = TextFieldState()
     val customPortState = TextFieldState()
@@ -44,6 +52,15 @@ class HomeViewModel(
                 _uiState.value = _uiState.value.copy(allHosts = hostList)
             }
         }
+        viewModelScope.launch {
+            dataStore.data.collectLatest { preferences ->
+                preferences[DataStore.RECENT_HOST]?.let { recentHost ->
+                    Log.d("HomeViewModel", "Recent host from DataStore: $recentHost")
+                    hostNameState.setTextAndPlaceCursorAtEnd(recentHost)
+                    onHostNameChanged(recentHost)
+                }
+            }
+        }
     }
 
     fun onCreate() {
@@ -54,15 +71,19 @@ class HomeViewModel(
         viewModelScope.launch {
             snapshotFlow { hostNameState.text }.collectLatest { queryText ->
                 if (hostName != queryText.toString()) {
-                    portScanRepo.validateHost(queryText.toString()) { status ->
-                        _uiState.value = _uiState.value.copy(
-                            hostValidStatus = status, recentPingStatus = Status.UNKNOWN
-                        )
-                    }
-                    hostName = queryText.toString()
+                    onHostNameChanged(queryText.toString())
                 }
             }
         }
+    }
+
+    private fun onHostNameChanged(queryText: String) {
+        portScanRepo.validateHost(queryText) { status ->
+            _uiState.value = _uiState.value.copy(
+                hostValidStatus = status, recentPingStatus = Status.UNKNOWN
+            )
+        }
+        hostName = queryText
     }
 
     fun listenForPortChange() {
@@ -92,7 +113,12 @@ class HomeViewModel(
             _uiState.value = _uiState.value.copy(
                 isPingInProgress = false, recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
             )
+
             dbRepo.insertHost(hostNameState.text.toString())
+            dataStore.edit { preferences ->
+                Log.d("HomeViewModel", "onHostPingSubmit save host to DataStore: ${hostNameState.text}")
+                preferences[DataStore.RECENT_HOST] = hostNameState.text.toString()
+            }
         }
     }
 
@@ -107,6 +133,9 @@ class HomeViewModel(
 
         viewModelScope.launch {
             dbRepo.insertHost(hostNameState.text.toString())
+            dataStore.edit { preferences ->
+                preferences[DataStore.RECENT_HOST] = hostNameState.text.toString()
+            }
         }
 
         val scanFlow = portScanRepo.scanPorts(
