@@ -39,9 +39,11 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             if (uiState.isPortScanInProgress) {
                 Progress(
                     Modifier
@@ -62,7 +64,7 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-            if (!uiState.isPortScanInProgress && result.isEmpty()) {
+            if (result.isEmpty()) {
                 Text(
                     text = stringResource(R.string.no_results),
                     modifier = Modifier.align(Alignment.Center)

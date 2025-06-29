@@ -8,11 +8,8 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
@@ -25,11 +22,6 @@ fun CustomTextField(
     placeholder: String = "",
     onSubmitted: () -> Unit = {}
 ) {
-    val brush = remember {
-        Brush.linearGradient(
-            colors = listOf(Color.Blue, Color.Magenta, Color.Red, Color.Blue, Color.Magenta)
-        )
-    }
     TextField(
         modifier = Modifier.fillMaxWidth(),
         enabled = enabled,
@@ -37,7 +29,6 @@ fun CustomTextField(
         label = { Text(label) },
         placeholder = { Text(placeholder, color = Color.Gray) },
         lineLimits = TextFieldLineLimits.SingleLine,
-        textStyle = TextStyle(brush = brush),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         onKeyboardAction = { performDefaultAction ->
             if (enabled) {
