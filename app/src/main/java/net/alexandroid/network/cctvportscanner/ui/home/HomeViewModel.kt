@@ -59,6 +59,11 @@ class HomeViewModel(
                     hostNameState.setTextAndPlaceCursorAtEnd(recentHost)
                     onHostNameChanged(recentHost)
                 }
+                preferences[DataStore.RECENT_PORT]?.let { recentPort ->
+                    Log.d("HomeViewModel", "Recent port from DataStore: $recentPort")
+                    customPortState.setTextAndPlaceCursorAtEnd(recentPort)
+                    onCustomPortChanged(recentPort)
+                }
             }
         }
     }
@@ -90,13 +95,17 @@ class HomeViewModel(
         viewModelScope.launch {
             snapshotFlow { customPortState.text }.collectLatest { queryText ->
                 if (port != queryText.toString()) {
-                    portScanRepo.validatePort(queryText.toString()) { status, validPorts ->
-                        _uiState.value = _uiState.value.copy(portValidStatus = status, validPorts = validPorts ?: "")
-                    }
-                    port = queryText.toString()
+                    onCustomPortChanged(queryText.toString())
                 }
             }
         }
+    }
+
+    private fun onCustomPortChanged(queryText: String) {
+        portScanRepo.validatePort(queryText) { status, validPorts ->
+            _uiState.value = _uiState.value.copy(portValidStatus = status, validPorts = validPorts ?: "")
+        }
+        port = queryText
     }
 
     fun onHostPingSubmit() {
@@ -135,6 +144,7 @@ class HomeViewModel(
             dbRepo.insertHost(hostNameState.text.toString())
             dataStore.edit { preferences ->
                 preferences[DataStore.RECENT_HOST] = hostNameState.text.toString()
+                preferences[DataStore.RECENT_PORT] = customPortState.text.toString()
             }
         }
 
