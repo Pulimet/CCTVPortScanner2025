@@ -38,7 +38,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val borderColor = when (uiState.hostValidStatus) {
         Status.SUCCESS -> Color.Green
         Status.FAILURE -> Color.Red
-        else -> Color.Black
+        else -> MaterialTheme.colorScheme.outline
     }
 
     val label = when(uiState.recentPingStatus) {
@@ -62,6 +62,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 enabled = !uiState.isPingInProgress && !uiState.isPortScanInProgress,
                 label = label,
                 placeholder = stringResource(R.string.ip_place_holder),
+                suggestionsList = uiState.allHosts,
                 onSubmitted = { homeViewModel.onHostPingSubmit() }
             )
             Row(

@@ -40,7 +40,8 @@ class HomeViewModel(
         viewModelScope.launch {
             dbRepo.getAllHostsFlow().collect { hosts ->
                 Log.d("HomeViewModel", "Hosts from DB: ${hosts.size}")
-                _uiState.value = _uiState.value.copy(allHosts = hosts)
+                val hostList = hosts.map { it.hostName }
+                _uiState.value = _uiState.value.copy(allHosts = hostList)
             }
         }
     }

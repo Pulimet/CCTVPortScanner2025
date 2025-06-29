@@ -17,5 +17,5 @@ data class HomeUiState(
     val portValidStatus: Status = Status.UNKNOWN,
     val validPorts: String = "",
     val portScanResults: Map<Int, PortScanStatus> = emptyMap(),
-    val allHosts: List<HostEntity> = emptyList()
+    val allHosts: List<String> = emptyList()
 )

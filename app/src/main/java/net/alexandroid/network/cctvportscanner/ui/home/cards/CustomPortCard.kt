@@ -36,7 +36,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val borderColor = when (uiState.portValidStatus) {
         Status.SUCCESS -> Color.Green
         Status.FAILURE -> Color.Red
-        else -> Color.Black
+        else -> MaterialTheme.colorScheme.outline
     }
 
     val label = when (uiState.portValidStatus) {

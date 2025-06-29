@@ -36,7 +36,7 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
 
     OutlinedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier.fillMaxWidth()
     ) {
         Box(
