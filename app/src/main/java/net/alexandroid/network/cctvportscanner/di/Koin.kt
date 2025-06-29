@@ -2,6 +2,7 @@ package net.alexandroid.network.cctvportscanner.di
 
 import android.content.Context
 import androidx.room.Room
+import net.alexandroid.network.cctvportscanner.repo.DataStoreRepo
 import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
@@ -27,6 +28,7 @@ object Koin {
         singleOf(::PortScanRepo)
         singleOf(::PingRepo)
         singleOf(::DbRepo)
+        singleOf(::DataStoreRepo)
 
         viewModelOf(::HomeViewModel)
 
