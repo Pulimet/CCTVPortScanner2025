@@ -8,6 +8,5 @@
         <item name="postSplashScreenTheme">@style/Theme.CCTVPortScanner2025</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/android_splash</item>
         <item name="android:windowBackground">@drawable/splash_legacy</item>
-        <item name="android:statusBarColor">@color/black</item>
     </style>
 </resources>
