@@ -60,6 +60,9 @@ dependencies {
 
     implementation(libs.androidx.dataStore.preferences)
 
+    implementation(libs.androidx.splashscreen)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
