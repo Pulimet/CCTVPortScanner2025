@@ -49,6 +49,9 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
     val isHostValid = uiState.hostValidStatus == Status.SUCCESS
     val isPortValid = uiState.portValidStatus == Status.SUCCESS
 
+    val isTextFieldEnabled = isHostValid && !uiState.isPortScanInProgress
+    val isCheckBtnEnabled = isPortValid && !uiState.isPortScanInProgress
+
     LaunchedEffect(uiState.portValidStatus) {
         homeViewModel.listenForPortChange()
     }
@@ -61,7 +64,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
         Box {
             CustomTextField(
                 textFieldState = homeViewModel.customPortState,
-                enabled = isHostValid && !uiState.isPortScanInProgress,
+                enabled = isTextFieldEnabled,
                 label = label,
                 placeholder = stringResource(R.string.port_example),
                 onSubmitted = { homeViewModel.onPortScanSubmit() })
@@ -73,7 +76,7 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 Button(
                     onClick = { homeViewModel.onPortScanSubmit() },
                     modifier = Modifier.padding(horizontal = 8.dp),
-                    enabled = isPortValid && !uiState.isPortScanInProgress,
+                    enabled = isCheckBtnEnabled,
                 ) {
                     Text(stringResource(R.string.check))
                 }

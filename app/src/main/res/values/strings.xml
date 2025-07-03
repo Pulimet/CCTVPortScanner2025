@@ -9,4 +9,5 @@
     <string name="port_example">80, 8080–8081</string>
     <string name="check">Check</string>
     <string name="no_results">No results</string>
+    <string name="no_buttons">No buttons</string>
 </resources>
