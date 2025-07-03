@@ -152,7 +152,7 @@ class HomeViewModel(
 
     @OptIn(FlowPreview::class)
     fun onPortScanSubmit() {
-        if (_uiState.value.portValidStatus != Status.SUCCESS && !_uiState.value.isPortScanInProgress) {
+        if (_uiState.value.portValidStatus != Status.SUCCESS || _uiState.value.isPortScanInProgress) {
             return
         }
         Log.d(TAG, "onPortSubmit")
@@ -165,8 +165,41 @@ class HomeViewModel(
             dataStoreRepo.saveRecentPort(customPortState.text.toString())
         }
 
+        scanPorts(customPortState.text.toString())
+    }
+
+    // Buttons
+    fun onButtonClick(button: ButtonEntity) {
+        Log.d(TAG, "Button clicked: ${button.title} with ports: ${button.ports}")
+        if (_uiState.value.isPortScanInProgress) {
+            return
+        }
+
+        viewModelScope.launch {
+            dbRepo.insertHost(hostNameState.text.toString())
+            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+        }
+        scanPorts(button.ports)
+    }
+
+    fun onAddButtonClick(title: String, ports: String) {
+        Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
+        viewModelScope.launch {
+            dbRepo.insertButton(title, ports)
+        }
+    }
+
+    fun onDeleteButtonClick(buttonEntity: ButtonEntity) {
+        Log.d(TAG, "onDeleteButtonClick with title: ${buttonEntity.title} and ports: ${buttonEntity.ports}")
+        viewModelScope.launch {
+            dbRepo.deleteButton(buttonEntity)
+        }
+    }
+
+    // Scan ports
+    private fun scanPorts(ports: String) {
         val scanFlow = portScanRepo.scanPorts(
-            hostNameState.text.toString(), customPortState.text.toString()
+            hostNameState.text.toString(), ports
         )
 
         scanFlow
@@ -184,24 +217,5 @@ class HomeViewModel(
             }.catch { e -> // Catch errors from the sampling part
                 Log.e(TAG, "Error in sampled progress flow", e)
             }.launchIn(viewModelScope) // Launch this part as a separate collector
-    }
-
-    // Buttons
-    fun onButtonClick(button: ButtonEntity) {
-        Log.d(TAG, "Button clicked: ${button.title} with ports: ${button.ports}")
-    }
-
-    fun onAddButtonClick(title: String, ports: String) {
-        Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
-        viewModelScope.launch {
-            dbRepo.insertButton(title, ports)
-        }
-    }
-
-    fun onDeleteButtonClick(buttonEntity: ButtonEntity) {
-        Log.d(TAG, "onDeleteButtonClick with title: ${buttonEntity.title} and ports: ${buttonEntity.ports}")
-        viewModelScope.launch {
-            dbRepo.deleteButton(buttonEntity)
-        }
     }
 }

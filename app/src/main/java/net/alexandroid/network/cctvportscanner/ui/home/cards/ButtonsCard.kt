@@ -44,7 +44,7 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
             if (uiState.allButtons.isEmpty()) {
                 Text(
@@ -60,7 +60,7 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
                         Button(
                             onClick = { homeViewModel.onButtonClick(button) },
                             enabled = isButtonsEnabled,
-                            contentPadding = PaddingValues(0.dp),
+                            contentPadding = PaddingValues(horizontal = 2.dp, vertical = 0.dp),
                             modifier = Modifier
                                 .height(50.dp)
                                 .padding(4.dp)
