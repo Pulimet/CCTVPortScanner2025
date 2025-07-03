@@ -3,6 +3,7 @@ package net.alexandroid.network.cctvportscanner.datasotre
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 
@@ -20,5 +21,6 @@ object DataStore {
     private val Context.recentHosts: DataStore<Preferences> by preferencesDataStore(name = Key.HOME_DATA.name)
 
     val RECENT_HOST = stringPreferencesKey("recent_host")
-    val RECENT_PORT = stringPreferencesKey("recent_PORT")
+    val RECENT_PORT = stringPreferencesKey("recent_port")
+    val DEFAULT_DATA_LOADED = booleanPreferencesKey("default_data_loaded")
 }

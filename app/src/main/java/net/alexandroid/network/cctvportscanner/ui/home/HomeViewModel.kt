@@ -70,6 +70,15 @@ class HomeViewModel(
                 }
             })
         }
+        viewModelScope.launch {
+            dataStoreRepo.isDefaultButtonsLoaded { isLoaded ->
+                if (isLoaded) return@isDefaultButtonsLoaded
+                viewModelScope.launch {
+                    dbRepo.loadDefaultButtons()
+                    dataStoreRepo.setDefaultDataLoaded()
+                }
+            }
+        }
     }
 
     fun onCreate() {

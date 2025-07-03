@@ -17,4 +17,8 @@ interface ButtonDao {
 
     @Query("SELECT * from buttons ORDER BY title ASC")
     fun getAllItemsFlow(): Flow<List<ButtonEntity>>
+
+    suspend fun insertAll(listOf: List<ButtonEntity>) {
+        listOf.forEach { insert(it) }
+    }
 }

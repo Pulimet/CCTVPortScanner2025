@@ -11,6 +11,20 @@ class DataStoreRepo(context: Context) {
 
     val dataStore = context.getDataStoreByKey(DataStore.Key.HOME_DATA)
 
+    suspend fun isDefaultButtonsLoaded(callback: (isDefaultsLoaded: Boolean) -> Unit) {
+        dataStore.data.collectLatest { preferences ->
+            val isDataLoaded = preferences[DataStore.DEFAULT_DATA_LOADED]
+            callback.invoke(isDataLoaded == true)
+        }
+    }
+
+    suspend fun setDefaultDataLoaded() {
+        dataStore.edit { preferences ->
+            Log.d("HomeViewModel", "Set default data loaded in DataStore")
+            preferences[DataStore.DEFAULT_DATA_LOADED] = true
+        }
+    }
+
     suspend fun getRecentHostAndPort(callback: (data: Pair<String, String>) -> Unit) {
         dataStore.data.collectLatest { preferences ->
             val recentHost = preferences[DataStore.RECENT_HOST]
