@@ -23,6 +23,7 @@ import net.alexandroid.network.cctvportscanner.repo.DataStoreRepo
 import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
+import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 
 class HomeViewModel(
     private val portScanRepo: PortScanRepo,
@@ -30,6 +31,10 @@ class HomeViewModel(
     private val dbRepo: DbRepo,
     private val dataStoreRepo: DataStoreRepo
 ) : ViewModel() {
+
+    companion object {
+        const val TAG = "HomeViewModel"
+    }
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
@@ -42,14 +47,21 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             dbRepo.getAllHostsFlow().collect { hosts ->
-                Log.d("HomeViewModel", "Hosts from DB: ${hosts.size}")
+                Log.d(TAG, "Hosts from DB: ${hosts.size}")
                 val hostList = hosts.map { it.hostName }
                 _uiState.value = _uiState.value.copy(allHosts = hostList)
             }
         }
         viewModelScope.launch {
+            dbRepo.getAllButtonsFlow().collect { buttons ->
+                Log.d(TAG, "Buttons from DB: ${buttons.size}")
+                _uiState.value = _uiState.value.copy(allButtons = buttons)
+            }
+        }
+
+        viewModelScope.launch {
             dataStoreRepo.getRecentHostAndPort({ recentHostAndPort ->
-                Log.d("HomeViewModel", "Recent host and port from DataStore: $recentHostAndPort")
+                Log.d(TAG, "Recent host and port from DataStore: $recentHostAndPort")
                 recentHostAndPort.let {
                     hostNameState.setTextAndPlaceCursorAtEnd(it.first)
                     customPortState.setTextAndPlaceCursorAtEnd(it.second)
@@ -61,9 +73,10 @@ class HomeViewModel(
     }
 
     fun onCreate() {
-        Log.d("HomeViewModel", "onCreate called $this")
+        Log.d(TAG, "onCreate called $this")
     }
 
+    // Hosts
     fun listenForHostNameChange() {
         viewModelScope.launch {
             snapshotFlow { hostNameState.text }.collectLatest { queryText ->
@@ -83,6 +96,34 @@ class HomeViewModel(
         hostName = queryText
     }
 
+    fun onHostPingSubmit() {
+        if (_uiState.value.hostValidStatus != Status.SUCCESS && !_uiState.value.isPortScanInProgress) {
+            return
+        }
+        Log.d(TAG, "onHostPingSubmit")
+
+        _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
+
+        viewModelScope.launch {
+            val pingResult = pingRepo.pingHost(hostNameState.text.toString())
+            Log.d(TAG, "pingHost complete and pingResult $pingResult")
+            _uiState.value = _uiState.value.copy(
+                isPingInProgress = false, recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
+            )
+
+            dbRepo.insertHost(hostNameState.text.toString())
+            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+        }
+    }
+
+    fun onDeleteHost(host: String) {
+        Log.d(TAG, "onDeleteHost called with host: $host")
+        viewModelScope.launch {
+            dbRepo.deleteHost(host)
+        }
+    }
+
+    // Ports
     fun listenForPortChange() {
         viewModelScope.launch {
             snapshotFlow { customPortState.text }.collectLatest { queryText ->
@@ -100,32 +141,12 @@ class HomeViewModel(
         port = queryText
     }
 
-    fun onHostPingSubmit() {
-        if (_uiState.value.hostValidStatus != Status.SUCCESS && !_uiState.value.isPortScanInProgress) {
-            return
-        }
-        Log.d("HomeViewModel", "onHostPingSubmit")
-
-        _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
-
-        viewModelScope.launch {
-            val pingResult = pingRepo.pingHost(hostNameState.text.toString())
-            Log.d("HomeViewModel", "pingHost complete and pingResult $pingResult")
-            _uiState.value = _uiState.value.copy(
-                isPingInProgress = false, recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
-            )
-
-            dbRepo.insertHost(hostNameState.text.toString())
-            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
-        }
-    }
-
     @OptIn(FlowPreview::class)
     fun onPortScanSubmit() {
         if (_uiState.value.portValidStatus != Status.SUCCESS && !_uiState.value.isPortScanInProgress) {
             return
         }
-        Log.d("HomeViewModel", "onPortSubmit")
+        Log.d(TAG, "onPortSubmit")
 
         _uiState.value = _uiState.value.copy(isPortScanInProgress = true)
 
@@ -140,19 +161,38 @@ class HomeViewModel(
         )
 
         scanFlow
-            .onStart { Log.d("HomeViewModel", "Port scan Started") }
+            .onStart { Log.d(TAG, "Port scan Started") }
             .conflate()
             .onEach { sampledUpdate ->
-                Log.d("HomeViewModel", "onEach results size: ${sampledUpdate.results.size}")
+                Log.d(TAG, "onEach results size: ${sampledUpdate.results.size}")
                 _uiState.value = _uiState.value.copy(
                     portScanResults = sampledUpdate.results, isPortScanInProgress = true
                 )
                 delay(500L)
             }.onCompletion {
-                Log.d("HomeViewModel", "Port scan completed")
+                Log.d(TAG, "Port scan completed")
                 _uiState.value = _uiState.value.copy(isPortScanInProgress = false)
             }.catch { e -> // Catch errors from the sampling part
-                Log.e("HomeViewModel", "Error in sampled progress flow", e)
+                Log.e(TAG, "Error in sampled progress flow", e)
             }.launchIn(viewModelScope) // Launch this part as a separate collector
+    }
+
+    // Buttons
+    fun onButtonClick(button: ButtonEntity) {
+        Log.d(TAG, "Button clicked: ${button.title} with ports: ${button.ports}")
+    }
+
+    fun onAddButtonClick(title: String, ports: String) {
+        Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
+        viewModelScope.launch {
+            dbRepo.insertButton(title, ports)
+        }
+    }
+
+    fun onDeleteButtonClick(buttonEntity: ButtonEntity) {
+        Log.d(TAG, "onDeleteButtonClick with title: ${buttonEntity.title} and ports: ${buttonEntity.ports}")
+        viewModelScope.launch {
+            dbRepo.deleteButton(buttonEntity)
+        }
     }
 }

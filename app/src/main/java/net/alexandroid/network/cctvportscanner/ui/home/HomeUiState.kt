@@ -1,6 +1,7 @@
 package net.alexandroid.network.cctvportscanner.ui.home
 
 import net.alexandroid.network.cctvportscanner.repo.PortScanStatus
+import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 
 enum class Status {
     SUCCESS,
@@ -16,5 +17,6 @@ data class HomeUiState(
     val portValidStatus: Status = Status.UNKNOWN,
     val validPorts: String = "",
     val portScanResults: Map<Int, PortScanStatus> = emptyMap(),
-    val allHosts: List<String> = emptyList()
+    val allHosts: List<String> = emptyList(),
+    val allButtons: List<ButtonEntity> = emptyList()
 )

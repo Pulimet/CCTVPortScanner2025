@@ -23,8 +23,8 @@ class DbRepo(private val hostDao: HostDao, private val buttonDao: ButtonDao) {
         buttonDao.insert(ButtonEntity(title = title, ports = ports))
     }
 
-    suspend fun deleteButton(title: String, ports: String) {
-        buttonDao.delete(ButtonEntity(title = title, ports = ports))
+    suspend fun deleteButton(buttonEntity: ButtonEntity) {
+        buttonDao.delete(buttonEntity)
     }
 
     fun getAllButtonsFlow() = buttonDao.getAllItemsFlow()

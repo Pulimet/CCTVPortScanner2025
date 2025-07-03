@@ -15,9 +15,6 @@ interface ButtonDao {
     @Delete
     suspend fun delete(item: ButtonEntity)
 
-    @Query("SELECT * from hosts ORDER BY host_name ASC")
-    suspend fun getAllItems(): List<ButtonEntity>
-
-    @Query("SELECT * from hosts ORDER BY host_name ASC")
+    @Query("SELECT * from buttons ORDER BY title ASC")
     fun getAllItemsFlow(): Flow<List<ButtonEntity>>
 }
