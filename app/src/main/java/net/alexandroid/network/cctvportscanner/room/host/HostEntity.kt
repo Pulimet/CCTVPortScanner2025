@@ -1,4 +1,4 @@
-package net.alexandroid.network.cctvportscanner.room
+package net.alexandroid.network.cctvportscanner.room.host
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

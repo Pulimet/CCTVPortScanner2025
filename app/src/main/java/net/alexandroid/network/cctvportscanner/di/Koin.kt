@@ -36,5 +36,6 @@ object Koin {
             Room.databaseBuilder(androidContext(), ScannerDatabase::class.java, "scanner_database").build()
         }
         single { get<ScannerDatabase>().hostDao() }
+        single { get<ScannerDatabase>().buttonDao() }
     }
 }
