@@ -194,10 +194,15 @@ class HomeViewModel(
 
     fun onAddButtonSubmitClick(title: String, ports: String) {
         Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
-        if(title.trim().isNotEmpty() && ports.trim().isNotEmpty()) {
-            _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
-            viewModelScope.launch {
-                dbRepo.insertButton(title, ports)
+        if (title.trim().isEmpty() || ports.trim().isEmpty()) {
+            return
+        }
+        portScanRepo.validatePort(ports) { status, validPorts ->
+            if (status == Status.SUCCESS) {
+                _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
+                viewModelScope.launch {
+                    dbRepo.insertButton(title, ports)
+                }
             }
         }
     }
@@ -215,10 +220,7 @@ class HomeViewModel(
             hostNameState.text.toString(), ports
         )
 
-        scanFlow
-            .onStart { Log.d(TAG, "Port scan Started") }
-            .conflate()
-            .onEach { sampledUpdate ->
+        scanFlow.onStart { Log.d(TAG, "Port scan Started") }.conflate().onEach { sampledUpdate ->
                 Log.d(TAG, "onEach results size: ${sampledUpdate.results.size}")
                 _uiState.value = _uiState.value.copy(
                     portScanResults = sampledUpdate.results, isPortScanInProgress = true
