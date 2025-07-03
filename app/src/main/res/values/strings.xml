@@ -10,4 +10,7 @@
     <string name="check">Check</string>
     <string name="no_results">No results</string>
     <string name="no_buttons">No buttons</string>
+    <string name="add_a_new_button">Add a new button</string>
+    <string name="button_title">Button Title</string>
+    <string name="add">Add</string>
 </resources>

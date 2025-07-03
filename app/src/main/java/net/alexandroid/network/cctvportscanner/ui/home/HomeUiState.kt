@@ -12,6 +12,7 @@ enum class Status {
 data class HomeUiState(
     val isPingInProgress: Boolean = false,
     val isPortScanInProgress: Boolean = false,
+    val showAddButtonDialog: Boolean = false,
     val hostValidStatus: Status = Status.UNKNOWN,
     val recentPingStatus: Status = Status.UNKNOWN,
     val portValidStatus: Status = Status.UNKNOWN,

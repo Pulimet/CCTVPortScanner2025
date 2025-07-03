@@ -81,10 +81,6 @@ class HomeViewModel(
         }
     }
 
-    fun onCreate() {
-        Log.d(TAG, "onCreate called $this")
-    }
-
     // Hosts
     fun listenForHostNameChange() {
         viewModelScope.launch {
@@ -182,10 +178,27 @@ class HomeViewModel(
         scanPorts(button.ports)
     }
 
-    fun onAddButtonClick(title: String, ports: String) {
+    fun onAddButtonClick() {
+        Log.d(TAG, "onAddButtonClick")
+        if (!uiState.value.showAddButtonDialog) {
+            _uiState.value = _uiState.value.copy(showAddButtonDialog = true)
+        }
+    }
+
+    fun onDismissAddButtonDialog() {
+        Log.d(TAG, "onDismissAddButtonDialog")
+        if (uiState.value.showAddButtonDialog) {
+            _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
+        }
+    }
+
+    fun onAddButtonSubmitClick(title: String, ports: String) {
         Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
-        viewModelScope.launch {
-            dbRepo.insertButton(title, ports)
+        if(title.trim().isNotEmpty() && ports.trim().isNotEmpty()) {
+            _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
+            viewModelScope.launch {
+                dbRepo.insertButton(title, ports)
+            }
         }
     }
 

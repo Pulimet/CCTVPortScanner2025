@@ -3,55 +3,43 @@ package net.alexandroid.network.cctvportscanner.ui.bottom
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import net.alexandroid.network.cctvportscanner.ui.theme.MyTheme
+import net.alexandroid.network.cctvportscanner.R
+import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
+import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar() {
+fun BottomBar(homeViewModel: HomeViewModel = koinViewModel()) {
     BottomAppBar(
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+/*            IconButton(onClick = { *//* do something *//* }) {
                 Icon(Icons.Filled.Check, contentDescription = "Localized description")
             }
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = { *//* do something *//* }) {
                 Icon(
                     Icons.Filled.Edit,
                     contentDescription = "Localized description",
                 )
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Default.Build,
-                    contentDescription = "Localized description",
-                )
-            }
-            IconButton(onClick = { /* do something */ }) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Localized description",
-                )
-            }
+            }*/
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* do something */ },
+                onClick = { homeViewModel.onAddButtonClick() },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
             ) {
-                Icon(Icons.Filled.Add, "Localized description")
+                Icon(Icons.Filled.Add, stringResource(R.string.add_a_new_button))
             }
         }
     )
@@ -61,7 +49,7 @@ fun BottomBar() {
 @Preview(showBackground = true)
 @Composable
 fun BottomBarPreview() {
-    MyTheme {
+    PreviewWrapper {
         BottomBar()
     }
 }
@@ -71,7 +59,7 @@ fun BottomBarPreview() {
 )
 @Composable
 fun BottomBarDarkPreview() {
-    MyTheme {
+    PreviewWrapper {
         BottomBar()
     }
 }
