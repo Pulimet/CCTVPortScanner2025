@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
+import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -57,28 +58,37 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(uiState.allButtons) { button ->
-                        Button(
-                            onClick = { homeViewModel.onButtonClick(button) },
-                            enabled = isButtonsEnabled,
-                            contentPadding = PaddingValues(horizontal = 2.dp, vertical = 0.dp),
-                            modifier = Modifier
-                                .height(50.dp)
-                                .padding(4.dp)
-                        ) {
-                            Text(
-                                text = button.title,
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    platformStyle = PlatformTextStyle( // Import PlatformTextStyle
-                                        includeFontPadding = false
-                                    )
-                                )
-                            )
-                        }
+                        CustomButton(homeViewModel, button, isButtonsEnabled)
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CustomButton(
+    homeViewModel: HomeViewModel,
+    button: ButtonEntity,
+    isButtonsEnabled: Boolean
+) {
+    Button(
+        onClick = { homeViewModel.onButtonClick(button) },
+        enabled = isButtonsEnabled,
+        contentPadding = PaddingValues(horizontal = 2.dp, vertical = 0.dp),
+        modifier = Modifier
+            .height(50.dp)
+            .padding(4.dp)
+    ) {
+        Text(
+            text = button.title,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodySmall.copy(
+                platformStyle = PlatformTextStyle( // Import PlatformTextStyle
+                    includeFontPadding = false
+                )
+            )
+        )
     }
 }
 
