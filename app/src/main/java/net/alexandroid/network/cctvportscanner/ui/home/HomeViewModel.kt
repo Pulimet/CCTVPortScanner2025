@@ -207,6 +207,10 @@ class HomeViewModel(
         }
     }
 
+    fun onButtonLongClick(button: ButtonEntity) {
+
+    }
+
     fun onDeleteButtonClick(buttonEntity: ButtonEntity) {
         Log.d(TAG, "onDeleteButtonClick with title: ${buttonEntity.title} and ports: ${buttonEntity.ports}")
         viewModelScope.launch {
@@ -221,16 +225,16 @@ class HomeViewModel(
         )
 
         scanFlow.onStart { Log.d(TAG, "Port scan Started") }.conflate().onEach { sampledUpdate ->
-                Log.d(TAG, "onEach results size: ${sampledUpdate.results.size}")
-                _uiState.value = _uiState.value.copy(
-                    portScanResults = sampledUpdate.results, isPortScanInProgress = true
-                )
-                delay(500L)
-            }.onCompletion {
-                Log.d(TAG, "Port scan completed")
-                _uiState.value = _uiState.value.copy(isPortScanInProgress = false)
-            }.catch { e -> // Catch errors from the sampling part
-                Log.e(TAG, "Error in sampled progress flow", e)
-            }.launchIn(viewModelScope) // Launch this part as a separate collector
+            Log.d(TAG, "onEach results size: ${sampledUpdate.results.size}")
+            _uiState.value = _uiState.value.copy(
+                portScanResults = sampledUpdate.results, isPortScanInProgress = true
+            )
+            delay(500L)
+        }.onCompletion {
+            Log.d(TAG, "Port scan completed")
+            _uiState.value = _uiState.value.copy(isPortScanInProgress = false)
+        }.catch { e -> // Catch errors from the sampling part
+            Log.e(TAG, "Error in sampled progress flow", e)
+        }.launchIn(viewModelScope) // Launch this part as a separate collector
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -27,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
+import net.alexandroid.network.cctvportscanner.ui.common.LongPressButon
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -72,8 +72,9 @@ private fun CustomButton(
     button: ButtonEntity,
     isButtonsEnabled: Boolean
 ) {
-    Button(
+    LongPressButon(
         onClick = { homeViewModel.onButtonClick(button) },
+        onLongClick = { homeViewModel.onButtonLongClick(button) },
         enabled = isButtonsEnabled,
         contentPadding = PaddingValues(horizontal = 2.dp, vertical = 0.dp),
         modifier = Modifier
