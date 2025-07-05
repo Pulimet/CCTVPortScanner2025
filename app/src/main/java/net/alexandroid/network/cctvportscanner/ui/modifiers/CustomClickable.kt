@@ -18,7 +18,7 @@ fun Modifier.customClickable(
 ): Modifier {
     val viewConfiguration = LocalViewConfiguration.current
 
-    LaunchedEffect(interactionSource) {
+    LaunchedEffect(interactionSource, onClick, onLongClick) {
         var isLongClick = false
 
         interactionSource?.interactions?.collectLatest { interaction ->

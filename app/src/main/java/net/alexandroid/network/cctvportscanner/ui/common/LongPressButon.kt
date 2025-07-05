@@ -28,14 +28,13 @@ fun LongPressButon(
     interactionSource: MutableInteractionSource? = remember { MutableInteractionSource() },
     content: @Composable RowScope.() -> Unit,
 ) {
-    val modifierAdjusted = modifier.customClickable(
-        interactionSource,
-        onClick = onClick,
-        onLongClick = onLongClick,
-    )
     Button(
         onClick = { /* No-op, handled by customClickable */ },
-        modifier = modifierAdjusted,
+        modifier = modifier.customClickable(
+            interactionSource,
+            onClick = onClick,
+            onLongClick = onLongClick,
+        ),
         enabled = enabled,
         shape = shape,
         colors = colors,
