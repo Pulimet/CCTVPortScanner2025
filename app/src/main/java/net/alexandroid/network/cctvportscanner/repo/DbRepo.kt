@@ -27,6 +27,10 @@ class DbRepo(private val hostDao: HostDao, private val buttonDao: ButtonDao) {
         buttonDao.delete(buttonEntity)
     }
 
+    suspend fun updateButton(buttonEntity: ButtonEntity) {
+        buttonDao.update(buttonEntity)
+    }
+
     fun getAllButtonsFlow() = buttonDao.getAllItemsFlow()
 
     suspend fun loadDefaultButtons() {

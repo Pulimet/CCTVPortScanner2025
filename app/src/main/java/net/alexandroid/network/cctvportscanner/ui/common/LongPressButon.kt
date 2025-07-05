@@ -34,7 +34,7 @@ fun LongPressButon(
         onLongClick = onLongClick,
     )
     Button(
-        onClick = onClick,
+        onClick = { /* No-op, handled by customClickable */ },
         modifier = modifierAdjusted,
         enabled = enabled,
         shape = shape,

@@ -13,8 +13,6 @@ import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 import net.alexandroid.network.cctvportscanner.ui.common.Status
-import net.alexandroid.network.cctvportscanner.ui.home.HomeUiState
-import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 
 class ButtonDialogViewModel(
     private val portScanRepo: PortScanRepo,
@@ -28,7 +26,9 @@ class ButtonDialogViewModel(
     private val _uiState = MutableStateFlow(ButtonDialogUiState())
     val uiState: StateFlow<ButtonDialogUiState> = _uiState.asStateFlow()
 
-    val dialogHostNameState = TextFieldState()
+    private var selectedButtonEntity: ButtonEntity? = null
+
+    val dialogTitleState = TextFieldState()
     val dialogPortState = TextFieldState()
 
     fun onAddButtonClick() {
@@ -46,9 +46,11 @@ class ButtonDialogViewModel(
     }
 
     fun onAddOrSaveButtonSubmitClick() {
-        val title = dialogHostNameState.text.toString()
+        val title = dialogTitleState.text.toString()
         val ports = dialogPortState.text.toString()
-        Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
+        dialogTitleState.setTextAndPlaceCursorAtEnd("")
+        dialogPortState.setTextAndPlaceCursorAtEnd("")
+        Log.d(TAG, "onAddOrSaveButtonSubmitClick with title: $title. and ports: $ports")
         if (title.trim().isEmpty() || ports.trim().isEmpty()) {
             return
         }
@@ -56,8 +58,19 @@ class ButtonDialogViewModel(
             if (status == Status.SUCCESS) {
                 _uiState.value = _uiState.value.copy(showAddButtonDialog = false, dialogEditMode = false)
                 viewModelScope.launch {
-                    dbRepo.deleteButton(ButtonEntity(title = title, ports = ports))
-                    dbRepo.insertButton(title, ports)
+                    if (selectedButtonEntity == null) {
+                        dbRepo.insertButton(title, ports)
+                    } else {
+                        selectedButtonEntity?.let {
+                            dbRepo.updateButton(
+                                it.copy(
+                                    title = title,
+                                    ports = ports
+                                )
+                            )
+                        }
+                        selectedButtonEntity = null
+                    }
                 }
             }
         }
@@ -66,18 +79,23 @@ class ButtonDialogViewModel(
     fun onButtonLongClick(button: ButtonEntity) {
         if (!uiState.value.showAddButtonDialog) {
             Log.d(TAG, "onButtonLongClick with title: ${button.title} and ports: ${button.ports}")
+            selectedButtonEntity = button
             _uiState.value = _uiState.value.copy(showAddButtonDialog = true, dialogEditMode = true)
-            dialogHostNameState.setTextAndPlaceCursorAtEnd(button.title)
+            dialogTitleState.setTextAndPlaceCursorAtEnd(button.title)
             dialogPortState.setTextAndPlaceCursorAtEnd(button.ports)
         }
     }
 
     fun onDeleteButtonClick() {
-        val title = dialogHostNameState.text.toString()
-        val ports = dialogPortState.text.toString()
-        Log.d(TAG, "onDeleteButtonClick with title: $title and ports: $ports")
+        Log.d(TAG, "onDeleteButtonClick with title: ${selectedButtonEntity?.title} and ports: ${selectedButtonEntity?.ports}")
+        dialogTitleState.setTextAndPlaceCursorAtEnd("")
+        dialogPortState.setTextAndPlaceCursorAtEnd("")
+        _uiState.value = _uiState.value.copy(showAddButtonDialog = false, dialogEditMode = false)
         viewModelScope.launch {
-            dbRepo.deleteButton(ButtonEntity(title = title, ports = ports))
+            selectedButtonEntity?.let {
+                dbRepo.deleteButton(it)
+            }
+            selectedButtonEntity = null
         }
     }
 

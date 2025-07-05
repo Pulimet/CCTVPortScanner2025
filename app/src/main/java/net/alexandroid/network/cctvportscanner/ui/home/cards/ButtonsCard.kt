@@ -58,7 +58,10 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel(), buttonDialogView
                     columns = GridCells.Fixed(3),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(uiState.allButtons) { button ->
+                    items(
+                        uiState.allButtons,
+                        key = { button -> button.id }
+                    ) { button ->
                         CustomButton(homeViewModel, buttonDialogViewModel, button, isButtonsEnabled)
                     }
                 }

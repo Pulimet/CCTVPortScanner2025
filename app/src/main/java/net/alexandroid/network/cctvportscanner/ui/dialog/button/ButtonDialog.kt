@@ -15,27 +15,27 @@ import net.alexandroid.network.cctvportscanner.ui.dialog.CustomDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AddButtonDialog(homeViewModel: ButtonDialogViewModel = koinViewModel()) {
-    val uiState by homeViewModel.uiState.collectAsState()
+fun AddButtonDialog(buttonDialogViewModel: ButtonDialogViewModel = koinViewModel()) {
+    val uiState by buttonDialogViewModel.uiState.collectAsState()
 
     if (uiState.showAddButtonDialog) {
         CustomDialog(
             title = stringResource(R.string.add_a_new_button),
-            onDismissRequest = { homeViewModel.onDismissAddButtonDialog() },
+            onDismissRequest = { buttonDialogViewModel.onDismissAddButtonDialog() },
             height = 280,
         ) {
             OutlinedTextField(
-                state = homeViewModel.dialogHostNameState,
+                state = buttonDialogViewModel.dialogTitleState,
                 label = { Text(stringResource(R.string.button_title)) }
             )
             OutlinedTextField(
-                state = homeViewModel.dialogPortState,
+                state = buttonDialogViewModel.dialogPortState,
                 label = { Text(stringResource(R.string.enter_port)) }
             )
             Row {
                 if (uiState.dialogEditMode) {
                     Button(
-                        onClick = { homeViewModel.onDeleteButtonClick() },
+                        onClick = { buttonDialogViewModel.onDeleteButtonClick() },
                         modifier = Modifier.fillMaxWidth(0.5f)
                     ) {
                         Text(text = stringResource(R.string.delete))
@@ -43,7 +43,7 @@ fun AddButtonDialog(homeViewModel: ButtonDialogViewModel = koinViewModel()) {
                 }
 
                 Button(
-                    onClick = { homeViewModel.onAddOrSaveButtonSubmitClick() },
+                    onClick = { buttonDialogViewModel.onAddOrSaveButtonSubmitClick() },
                     modifier = Modifier.fillMaxWidth(0.5f)
                 ) {
                     Text(

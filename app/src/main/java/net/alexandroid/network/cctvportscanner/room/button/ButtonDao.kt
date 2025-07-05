@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,6 +15,9 @@ interface ButtonDao {
 
     @Delete
     suspend fun delete(item: ButtonEntity)
+
+    @Update
+    suspend fun update(item: ButtonEntity)
 
     @Query("SELECT * from buttons ORDER BY title ASC")
     fun getAllItemsFlow(): Flow<List<ButtonEntity>>
