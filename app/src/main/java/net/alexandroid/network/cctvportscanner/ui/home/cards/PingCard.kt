@@ -26,8 +26,8 @@ import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Progress
+import net.alexandroid.network.cctvportscanner.ui.common.Status
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
-import net.alexandroid.network.cctvportscanner.ui.home.Status
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -41,7 +41,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
         else -> MaterialTheme.colorScheme.outline
     }
 
-    val label = when(uiState.recentPingStatus) {
+    val label = when (uiState.recentPingStatus) {
         Status.SUCCESS -> stringResource(R.string.ping_success)
         Status.FAILURE -> stringResource(R.string.ping_failure)
         else -> stringResource(R.string.enter_ip_url)

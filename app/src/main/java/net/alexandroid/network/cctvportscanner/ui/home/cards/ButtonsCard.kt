@@ -28,11 +28,12 @@ import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 import net.alexandroid.network.cctvportscanner.ui.common.LongPressButon
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
+import net.alexandroid.network.cctvportscanner.ui.dialog.button.ButtonDialogViewModel
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
+fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel(), buttonDialogViewModel: ButtonDialogViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsState()
 
     val isButtonsEnabled = !uiState.isPortScanInProgress
@@ -58,7 +59,7 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(uiState.allButtons) { button ->
-                        CustomButton(homeViewModel, button, isButtonsEnabled)
+                        CustomButton(homeViewModel, buttonDialogViewModel, button, isButtonsEnabled)
                     }
                 }
             }
@@ -69,12 +70,13 @@ fun ButtonsCard(homeViewModel: HomeViewModel = koinViewModel()) {
 @Composable
 private fun CustomButton(
     homeViewModel: HomeViewModel,
+    buttonDialogViewModel: ButtonDialogViewModel,
     button: ButtonEntity,
     isButtonsEnabled: Boolean
 ) {
     LongPressButon(
         onClick = { homeViewModel.onButtonClick(button) },
-        onLongClick = { homeViewModel.onButtonLongClick(button) },
+        onLongClick = { buttonDialogViewModel.onButtonLongClick(button) },
         enabled = isButtonsEnabled,
         contentPadding = PaddingValues(horizontal = 2.dp, vertical = 0.dp),
         modifier = Modifier

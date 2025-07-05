@@ -8,7 +8,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import net.alexandroid.network.cctvportscanner.ui.home.Status
+import net.alexandroid.network.cctvportscanner.ui.common.Status
 import net.alexandroid.network.cctvportscanner.utils.PortUtils
 import java.net.InetSocketAddress
 import java.net.Socket

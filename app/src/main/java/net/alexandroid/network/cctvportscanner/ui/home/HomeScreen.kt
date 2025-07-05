@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import net.alexandroid.network.cctvportscanner.dialog.AddButtonDialog
+import net.alexandroid.network.cctvportscanner.ui.dialog.button.AddButtonDialog
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.home.cards.ButtonsCard
 import net.alexandroid.network.cctvportscanner.ui.home.cards.CustomPortCard

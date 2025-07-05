@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
+import net.alexandroid.network.cctvportscanner.ui.common.Status
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
-import net.alexandroid.network.cctvportscanner.ui.home.Status
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

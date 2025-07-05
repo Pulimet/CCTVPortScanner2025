@@ -7,6 +7,7 @@ import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
 import net.alexandroid.network.cctvportscanner.room.ScannerDatabase
+import net.alexandroid.network.cctvportscanner.ui.dialog.button.ButtonDialogViewModel
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -31,6 +32,7 @@ object Koin {
         singleOf(::DataStoreRepo)
 
         viewModelOf(::HomeViewModel)
+        viewModelOf(::ButtonDialogViewModel)
 
         single {
             Room.databaseBuilder(androidContext(), ScannerDatabase::class.java, "scanner_database").build()

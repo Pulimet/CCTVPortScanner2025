@@ -1,4 +1,4 @@
-package net.alexandroid.network.cctvportscanner.dialog
+package net.alexandroid.network.cctvportscanner.ui.dialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

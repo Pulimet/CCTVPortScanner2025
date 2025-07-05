@@ -24,6 +24,7 @@ import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PingRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
+import net.alexandroid.network.cctvportscanner.ui.common.Status
 
 class HomeViewModel(
     private val portScanRepo: PortScanRepo,
@@ -164,60 +165,6 @@ class HomeViewModel(
         scanPorts(customPortState.text.toString())
     }
 
-    // Buttons
-    fun onButtonClick(button: ButtonEntity) {
-        Log.d(TAG, "Button clicked: ${button.title} with ports: ${button.ports}")
-        if (_uiState.value.isPortScanInProgress) {
-            return
-        }
-
-        viewModelScope.launch {
-            dbRepo.insertHost(hostNameState.text.toString())
-            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
-        }
-        scanPorts(button.ports)
-    }
-
-    fun onAddButtonClick() {
-        Log.d(TAG, "onAddButtonClick")
-        if (!uiState.value.showAddButtonDialog) {
-            _uiState.value = _uiState.value.copy(showAddButtonDialog = true)
-        }
-    }
-
-    fun onDismissAddButtonDialog() {
-        Log.d(TAG, "onDismissAddButtonDialog")
-        if (uiState.value.showAddButtonDialog) {
-            _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
-        }
-    }
-
-    fun onAddButtonSubmitClick(title: String, ports: String) {
-        Log.d(TAG, "onAddButtonClick with title: $title and ports: $ports")
-        if (title.trim().isEmpty() || ports.trim().isEmpty()) {
-            return
-        }
-        portScanRepo.validatePort(ports) { status, validPorts ->
-            if (status == Status.SUCCESS) {
-                _uiState.value = _uiState.value.copy(showAddButtonDialog = false)
-                viewModelScope.launch {
-                    dbRepo.insertButton(title, ports)
-                }
-            }
-        }
-    }
-
-    fun onButtonLongClick(button: ButtonEntity) {
-
-    }
-
-    fun onDeleteButtonClick(buttonEntity: ButtonEntity) {
-        Log.d(TAG, "onDeleteButtonClick with title: ${buttonEntity.title} and ports: ${buttonEntity.ports}")
-        viewModelScope.launch {
-            dbRepo.deleteButton(buttonEntity)
-        }
-    }
-
     // Scan ports
     private fun scanPorts(ports: String) {
         val scanFlow = portScanRepo.scanPorts(
@@ -236,5 +183,19 @@ class HomeViewModel(
         }.catch { e -> // Catch errors from the sampling part
             Log.e(TAG, "Error in sampled progress flow", e)
         }.launchIn(viewModelScope) // Launch this part as a separate collector
+    }
+
+    // Buttons
+    fun onButtonClick(button: ButtonEntity) {
+        Log.d(TAG, "Button clicked: ${button.title} with ports: ${button.ports}")
+        if (_uiState.value.isPortScanInProgress) {
+            return
+        }
+
+        viewModelScope.launch {
+            dbRepo.insertHost(hostNameState.text.toString())
+            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+        }
+        scanPorts(button.ports)
     }
 }

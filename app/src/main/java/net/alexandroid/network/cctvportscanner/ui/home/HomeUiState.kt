@@ -2,12 +2,8 @@ package net.alexandroid.network.cctvportscanner.ui.home
 
 import net.alexandroid.network.cctvportscanner.repo.PortScanStatus
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
+import net.alexandroid.network.cctvportscanner.ui.common.Status
 
-enum class Status {
-    SUCCESS,
-    FAILURE,
-    UNKNOWN
-}
 
 data class HomeUiState(
     val isPingInProgress: Boolean = false,

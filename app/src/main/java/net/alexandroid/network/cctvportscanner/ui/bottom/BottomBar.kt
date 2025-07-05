@@ -14,13 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
-import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
+import net.alexandroid.network.cctvportscanner.ui.dialog.button.ButtonDialogViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(homeViewModel: HomeViewModel = koinViewModel()) {
+fun BottomBar(buttonDialogViewModel: ButtonDialogViewModel = koinViewModel()) {
     BottomAppBar(
         actions = {
 /*            IconButton(onClick = { *//* do something *//* }) {
@@ -35,7 +35,7 @@ fun BottomBar(homeViewModel: HomeViewModel = koinViewModel()) {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { homeViewModel.onAddButtonClick() },
+                onClick = { buttonDialogViewModel.onAddButtonClick() },
                 containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
             ) {
