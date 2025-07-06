@@ -99,4 +99,11 @@ class ButtonDialogViewModel(
         }
     }
 
+    fun deleteAllButtons() {
+        Log.d(TAG, "deleteAllButtons")
+        viewModelScope.launch {
+            dbRepo.deleteAllButtons()
+        }
+    }
+
 }

@@ -3,12 +3,14 @@ package net.alexandroid.network.cctvportscanner.ui.bottom
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,15 +25,9 @@ import org.koin.androidx.compose.koinViewModel
 fun BottomBar(buttonDialogViewModel: ButtonDialogViewModel = koinViewModel()) {
     BottomAppBar(
         actions = {
-/*            IconButton(onClick = { *//* do something *//* }) {
-                Icon(Icons.Filled.Check, contentDescription = "Localized description")
+            IconButton(onClick = { buttonDialogViewModel.deleteAllButtons() }) {
+                Icon(Icons.Filled.Delete, contentDescription = "Delete All")
             }
-            IconButton(onClick = { *//* do something *//* }) {
-                Icon(
-                    Icons.Filled.Edit,
-                    contentDescription = "Localized description",
-                )
-            }*/
         },
         floatingActionButton = {
             FloatingActionButton(

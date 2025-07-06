@@ -25,4 +25,7 @@ interface ButtonDao {
     suspend fun insertAll(listOf: List<ButtonEntity>) {
         listOf.forEach { insert(it) }
     }
+
+    @Query("DELETE FROM buttons")
+    fun deleteAll()
 }

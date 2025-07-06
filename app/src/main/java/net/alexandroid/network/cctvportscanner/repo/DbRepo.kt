@@ -1,5 +1,7 @@
 package net.alexandroid.network.cctvportscanner.repo
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.alexandroid.network.cctvportscanner.room.button.ButtonDao
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
 import net.alexandroid.network.cctvportscanner.room.host.HostDao
@@ -8,32 +10,32 @@ import net.alexandroid.network.cctvportscanner.room.host.HostEntity
 class DbRepo(private val hostDao: HostDao, private val buttonDao: ButtonDao) {
 
     // HostDao
-    suspend fun insertHost(host: String) {
+    suspend fun insertHost(host: String) = withContext(Dispatchers.IO) {
         hostDao.insert(HostEntity(hostName = host))
     }
 
-    suspend fun deleteHost(host: String) {
+    suspend fun deleteHost(host: String) = withContext(Dispatchers.IO) {
         hostDao.delete(HostEntity(hostName = host))
     }
 
     fun getAllHostsFlow() = hostDao.getAllItemsFlow()
 
     // BtnDao
-    suspend fun insertButton(title: String, ports: String) {
+    suspend fun insertButton(title: String, ports: String) = withContext(Dispatchers.IO) {
         buttonDao.insert(ButtonEntity(title = title, ports = ports))
     }
 
-    suspend fun deleteButton(buttonEntity: ButtonEntity) {
+    suspend fun deleteButton(buttonEntity: ButtonEntity) = withContext(Dispatchers.IO) {
         buttonDao.delete(buttonEntity)
     }
 
-    suspend fun updateButton(buttonEntity: ButtonEntity) {
+    suspend fun updateButton(buttonEntity: ButtonEntity) = withContext(Dispatchers.IO) {
         buttonDao.update(buttonEntity)
     }
 
     fun getAllButtonsFlow() = buttonDao.getAllItemsFlow()
 
-    suspend fun loadDefaultButtons() {
+    suspend fun loadDefaultButtons() = withContext(Dispatchers.IO) {
         buttonDao.insertAll(
             listOf(
                 ButtonEntity(title = "80", ports = "80"),
@@ -53,5 +55,9 @@ class DbRepo(private val hostDao: HostDao, private val buttonDao: ButtonDao) {
                 ButtonEntity(title = "Avtech", ports = "80")
             )
         )
+    }
+
+    suspend fun deleteAllButtons() = withContext(Dispatchers.IO) {
+        buttonDao.deleteAll()
     }
 }
