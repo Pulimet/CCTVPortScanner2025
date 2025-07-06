@@ -13,5 +13,21 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         enableEdgeToEdge()
         setContent { AppWrapper() }
+
+        // TODO Fix Dialog UI
+        // Port validation
+
+        // TODO Support Landscape mode
+
+        // TODO Support multiple languages
+
+        // TODO Add Crashlytics
+
+        // TODO Redesign UI (incl. dark mode)
+        // 1. Play with colors
+        // 2. Reorganize UI elements
+        // 3. Add animations
+
+        // TODO Release on Google Play Version 1.21
     }
 }
