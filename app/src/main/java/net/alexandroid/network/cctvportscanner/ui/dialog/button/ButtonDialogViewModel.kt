@@ -3,11 +3,13 @@ package net.alexandroid.network.cctvportscanner.ui.dialog.button
 import android.util.Log
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import net.alexandroid.network.cctvportscanner.repo.DbRepo
 import net.alexandroid.network.cctvportscanner.repo.PortScanRepo
@@ -30,6 +32,7 @@ class ButtonDialogViewModel(
 
     val dialogTitleState = TextFieldState()
     val dialogPortState = TextFieldState()
+    var port = ""
 
     fun onAddButtonClick() {
         Log.d(TAG, "onAddButtonClick")
@@ -104,6 +107,23 @@ class ButtonDialogViewModel(
         viewModelScope.launch {
             dbRepo.deleteAllButtons()
         }
+    }
+
+    fun listenForPortChange() {
+        viewModelScope.launch {
+            snapshotFlow { dialogPortState.text }.collectLatest { queryText ->
+                if (port != queryText.toString()) {
+                    onCustomPortChanged(queryText.toString())
+                }
+            }
+        }
+    }
+
+    private fun onCustomPortChanged(queryText: String) {
+        portScanRepo.validatePort(queryText) { status, _ ->
+            _uiState.value = _uiState.value.copy(portValidStatus = status)
+        }
+        port = queryText
     }
 
 }

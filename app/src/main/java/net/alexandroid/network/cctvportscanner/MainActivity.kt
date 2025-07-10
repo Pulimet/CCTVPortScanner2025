@@ -14,9 +14,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent { AppWrapper() }
 
-        // TODO Fix Dialog UI
-        // Port validation
-
         // TODO Support Landscape mode
 
         // TODO Support multiple languages
