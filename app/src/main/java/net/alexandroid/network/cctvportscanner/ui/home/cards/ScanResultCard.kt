@@ -59,7 +59,6 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
                 Text(
                     buildAnnotatedString {
                         result.forEach {
-                            it
                             withStyle(style = SpanStyle(color = it.value)) {
                                 append(it.key)
                             }
