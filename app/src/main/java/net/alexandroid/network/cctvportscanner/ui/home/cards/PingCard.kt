@@ -31,7 +31,7 @@ import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
+fun PingCard(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = koinViewModel()) {
     val uiState by homeViewModel.uiState.collectAsState()
     val isHostNameValid = uiState.hostValidStatus == Status.SUCCESS
 
@@ -54,7 +54,7 @@ fun PingCard(homeViewModel: HomeViewModel = koinViewModel()) {
     OutlinedCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         border = BorderStroke(1.dp, borderColor),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Box {
             CustomTextField(

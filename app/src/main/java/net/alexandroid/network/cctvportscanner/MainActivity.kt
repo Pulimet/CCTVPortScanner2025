@@ -14,8 +14,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent { AppWrapper() }
 
-        // TODO Support Landscape mode
-
         // TODO Support multiple languages
 
         // TODO Add Crashlytics
