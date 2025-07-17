@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">סורק פורטים</string>
+    <string name="ping">פינג</string>
+    <string name="enter_ip_url">הזן IP/כתובת אתר…</string>
+    <string name="ping_success">הפינג הצליח</string>
+    <string name="ping_failure">הפינג נכשל</string>
+    <string name="ip_place_holder">192.168.0.1</string>
+    <string name="enter_port">הזן פורט…</string>
+    <string name="port_example">80, 8080–8081</string>
+    <string name="check">בדיקה</string>
+    <string name="no_results">אין תוצאות</string>
+    <string name="no_buttons">אין לחצנים</string>
+    <string name="add_a_new_button">הוסף לחצן חדש</string>
+    <string name="button_title">כותרת הלחצן</string>
+    <string name="add">הוספה</string>
+    <string name="save">שמירה</string>
+    <string name="delete">מחיקה</string>
+    <string name="delete_all">מחק הכל</string>
+</resources>

@@ -14,8 +14,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent { AppWrapper() }
 
-        // TODO Support multiple languages
-
         // TODO Add Crashlytics
 
         // TODO Redesign UI (incl. dark mode)

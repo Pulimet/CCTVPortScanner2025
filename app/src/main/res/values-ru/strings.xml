@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Сканер портов</string>
+    <string name="ping">Пинг</string>
+    <string name="enter_ip_url">Введите IP/URL…</string>
+    <string name="ping_success">Пинг успешен</string>
+    <string name="ping_failure">Пинг не удался</string>
+    <string name="ip_place_holder">192.168.0.1</string>
+    <string name="enter_port">Введите порт…</string>
+    <string name="port_example">80, 8080–8081</string>
+    <string name="check">Проверить</string>
+    <string name="no_results">Нет результатов</string>
+    <string name="no_buttons">Нет кнопок</string>
+    <string name="add_a_new_button">Добавить новую кнопку</string>
+    <string name="button_title">Заголовок кнопки</string>
+    <string name="add">Добавить</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_all">Удалить все</string>
+</resources>
