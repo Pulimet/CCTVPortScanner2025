@@ -116,14 +116,14 @@ class HomeViewModel(
         _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
 
         viewModelScope.launch {
-            val pingResult = pingRepo.pingHost(hostNameState.text.toString())
+            val pingResult = pingRepo.pingHost(host)
             Log.d(TAG, "pingHost complete and pingResult $pingResult")
             _uiState.value = _uiState.value.copy(
                 isPingInProgress = false, recentPingStatus = if (pingResult) Status.SUCCESS else Status.FAILURE
             )
 
-            dbRepo.insertHost(hostNameState.text.toString())
-            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+            dbRepo.insertHost(host)
+            dataStoreRepo.saveRecentHost(host)
         }
     }
 
@@ -157,13 +157,16 @@ class HomeViewModel(
         if (_uiState.value.portValidStatus != Status.SUCCESS || _uiState.value.isPortScanInProgress) {
             return
         }
+        val host = hostNameState.text.toString()
+        if(host.trim().isEmpty()) {
+            return
+        }
+
         Log.d(TAG, "onPortSubmit")
 
-        _uiState.value = _uiState.value.copy(isPortScanInProgress = true)
-
         viewModelScope.launch {
-            dbRepo.insertHost(hostNameState.text.toString())
-            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+            dbRepo.insertHost(host)
+            dataStoreRepo.saveRecentHost(host)
             dataStoreRepo.saveRecentPort(customPortState.text.toString())
         }
 
@@ -172,6 +175,8 @@ class HomeViewModel(
 
     // Scan ports
     private fun scanPorts(ports: String) {
+        _uiState.value = _uiState.value.copy(isPortScanInProgress = true)
+
         val scanFlow = portScanRepo.scanPorts(
             hostNameState.text.toString(), ports
         )
@@ -197,10 +202,16 @@ class HomeViewModel(
             return
         }
 
-        viewModelScope.launch {
-            dbRepo.insertHost(hostNameState.text.toString())
-            dataStoreRepo.saveRecentHost(hostNameState.text.toString())
+        val host = hostNameState.text.toString()
+        if(host.trim().isEmpty()) {
+            return
         }
+
         scanPorts(button.ports)
+
+        viewModelScope.launch {
+            dbRepo.insertHost(host)
+            dataStoreRepo.saveRecentHost(host)
+        }
     }
 }
