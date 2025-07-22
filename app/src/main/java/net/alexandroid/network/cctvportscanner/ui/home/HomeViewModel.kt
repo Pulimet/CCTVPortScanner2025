@@ -108,6 +108,11 @@ class HomeViewModel(
         }
         Log.d(TAG, "onHostPingSubmit")
 
+        val host = hostNameState.text.toString()
+        if(host.trim().isEmpty()) {
+            return
+        }
+
         _uiState.value = _uiState.value.copy(isPingInProgress = true, recentPingStatus = Status.UNKNOWN)
 
         viewModelScope.launch {
