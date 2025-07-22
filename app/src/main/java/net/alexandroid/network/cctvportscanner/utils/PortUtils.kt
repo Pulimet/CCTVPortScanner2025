@@ -1,8 +1,8 @@
 package net.alexandroid.network.cctvportscanner.utils
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Green
 import net.alexandroid.network.cctvportscanner.repo.PortScanStatus
-import net.alexandroid.network.cctvportscanner.ui.theme.Green
 
 object PortUtils {
     fun convertStringToIntegerList(ports: String): ArrayList<Int> {
@@ -18,7 +18,7 @@ object PortUtils {
                     if (p[0].isNotEmpty() && p[1].isNotEmpty() && p[0].length < 6 && p[1].length < 6) {
                         val from = p[0].toInt()
                         val to = p[1].toInt()
-                        if (from < to && to < 65535 && from > 0) {
+                        if (to in (from + 1)..65534 && from > 0) {
                             for (a in from..to) {
                                 list.add(a)
                             }
@@ -27,8 +27,8 @@ object PortUtils {
                 }
             } else {
                 if (line.isNotEmpty() && line.length < 6) {
-                    val check_port = line.toInt()
-                    if ((check_port > 0) and (check_port < 65536)) list.add(check_port)
+                    val checkPort = line.toInt()
+                    if ((checkPort > 0) and (checkPort < 65536)) list.add(checkPort)
                 }
             }
         }
@@ -83,9 +83,9 @@ object PortUtils {
                     }
                 } else {
                     if (firstRangeNum == 0) {
-                        map.put("$port ", Green)
+                        map["$port "] = Green
                     } else {
-                        map.put("$firstRangeNum - $port ", Color.Green)
+                        map["$firstRangeNum - $port "] = Green
                         firstRangeNum = 0
                     }
                 }
@@ -96,9 +96,9 @@ object PortUtils {
                     }
                 } else {
                     if (firstRangeNum == 0) {
-                        map.put("$port ", Color.Red)
+                        map["$port "] = Color.Red
                     } else {
-                        map.put("$firstRangeNum - $port ", Color.Red)
+                        map["$firstRangeNum - $port "] = Color.Red
                         firstRangeNum = 0
                     }
                 }
