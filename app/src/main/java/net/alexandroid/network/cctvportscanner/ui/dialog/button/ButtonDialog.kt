@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
+import net.alexandroid.network.cctvportscanner.ui.common.CustomPreviews
+import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Status
 import net.alexandroid.network.cctvportscanner.ui.dialog.CustomDialog
 import org.koin.androidx.compose.koinViewModel
@@ -100,5 +102,15 @@ private fun BottomRow(
                 )
             )
         }
+    }
+}
+
+@CustomPreviews
+@Composable
+fun AddButtonDialogPreview() {
+    PreviewWrapper {
+        val buttonDialogViewModel: ButtonDialogViewModel = koinViewModel()
+        buttonDialogViewModel.onAddButtonClick()
+        AddButtonDialog()
     }
 }

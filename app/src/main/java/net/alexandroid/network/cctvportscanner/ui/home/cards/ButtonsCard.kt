@@ -1,6 +1,5 @@
 package net.alexandroid.network.cctvportscanner.ui.home.cards
 
-import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,10 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
 import net.alexandroid.network.cctvportscanner.room.button.ButtonEntity
+import net.alexandroid.network.cctvportscanner.ui.common.CustomPreviews
 import net.alexandroid.network.cctvportscanner.ui.common.LongPressButon
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.dialog.button.ButtonDialogViewModel
@@ -98,17 +97,9 @@ private fun CustomButton(
     }
 }
 
-@Preview(showBackground = true)
+@CustomPreviews
 @Composable
 fun ButtonsCardPreview() {
-    PreviewWrapper {
-        ButtonsCard()
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ButtonsCardDarkPreview() {
     PreviewWrapper {
         ButtonsCard()
     }

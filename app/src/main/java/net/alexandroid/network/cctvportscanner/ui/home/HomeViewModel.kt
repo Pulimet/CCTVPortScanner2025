@@ -42,8 +42,8 @@ class HomeViewModel(
 
     val hostNameState = TextFieldState()
     val customPortState = TextFieldState()
-    var hostName = ""
-    var port = ""
+    private var hostName = ""
+    private var port = ""
 
     init {
         viewModelScope.launch {

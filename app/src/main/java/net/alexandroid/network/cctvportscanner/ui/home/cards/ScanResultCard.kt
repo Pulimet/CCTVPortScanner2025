@@ -21,9 +21,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
+import net.alexandroid.network.cctvportscanner.ui.common.CustomPreviews
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Progress
 import net.alexandroid.network.cctvportscanner.ui.home.HomeViewModel
@@ -77,18 +77,9 @@ fun ScanResultCard(homeViewModel: HomeViewModel = koinViewModel()) {
     }
 }
 
-
-@Preview(showBackground = true)
+@CustomPreviews
 @Composable
 fun ProgressPreview() {
-    PreviewWrapper {
-        ScanResultCard()
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ProgressDarkPreview() {
     PreviewWrapper {
         ScanResultCard()
     }

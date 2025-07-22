@@ -1,6 +1,5 @@
 package net.alexandroid.network.cctvportscanner.ui.home.cards
 
-import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,9 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.alexandroid.network.cctvportscanner.R
+import net.alexandroid.network.cctvportscanner.ui.common.CustomPreviews
 import net.alexandroid.network.cctvportscanner.ui.common.CustomTextField
 import net.alexandroid.network.cctvportscanner.ui.common.PreviewWrapper
 import net.alexandroid.network.cctvportscanner.ui.common.Status
@@ -44,7 +43,6 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
         Status.FAILURE -> "Non valid port"
         else -> stringResource(R.string.enter_port)
     }
-
 
     val isHostValid = uiState.hostValidStatus == Status.SUCCESS
     val isPortValid = uiState.portValidStatus == Status.SUCCESS
@@ -86,17 +84,9 @@ fun CustomPortCard(homeViewModel: HomeViewModel = koinViewModel()) {
     }
 }
 
-@Preview(showBackground = true)
+@CustomPreviews
 @Composable
 fun CustomPortCardPreview() {
-    PreviewWrapper {
-        CustomPortCard()
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun CustomPortCardDarkPreview() {
     PreviewWrapper {
         CustomPortCard()
     }
